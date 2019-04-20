@@ -41,11 +41,16 @@ exports.Post = (req, res, next) =>{
         partner: null
     })
     user.save()
-        .then(result => console.log(result))
+        .then(result => {
+            console.log(result);
+            return res.json({
+                route: 'POST',
+                success: 'Info added'
+            });
+
+        })
         .catch(err => console.error(err));
-    return res.json({
-        route: 'POST'
-    });
+   
 }
 exports.Put = (req, res, next) =>{
     return res.json({

@@ -1,3 +1,4 @@
+// killall -9 node
 const request = require('supertest');
 describe('loading express server', ()=>{
    
@@ -28,4 +29,5 @@ describe('loading express server', ()=>{
           .get('/foo/bar')
           .expect(404, done);
       });
+    //   server.close();
 });

@@ -1,9 +1,10 @@
 const express = require('express');
 const createError = require('http-errors');
 const mongoose = require('mongoose');
-const config =require('./config');
+// const config =require('./config');
 const bodyParser = require('body-parser');
 
+const PORT = 5000;
 
 
 const app = express();
@@ -21,7 +22,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/postcards', {useNewUrlParser: true})
 const routes = require('./routes');
 
 
-const PORT = 5000;
 
 // app.set('view engine', 'pug');
 // app.set('views', path.join(__dirname, './views'));
