@@ -5,24 +5,41 @@ const userSchema = mongoose.Schema({
     name: {
         first: {
             type: String,
-            required: true
+            required: [true, "Must include first name"]
         },
         last: {
             type: String,
-            required: true
+            required: [true, "Must include last name"]
         }
     },
     contact: {
         email: {
             type: String,
-            required: true
+            unique: true,
+            required: true,
+            match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
         },
         address: {
-            streetNumber: Number,
-            streetName: String,
-            city: String,
-            country: String,
-            postalCode: Number
+            streetId: {
+                type: String,
+                required: true
+            },
+            streetName: {
+                type: String,
+                required: true
+            },
+            city: {
+                type: String,
+                required: true
+            },
+            country: {
+                type: String,
+                required: true
+            },
+            postalCode: {
+                type: Number,
+                required: true
+            },
         }
     },
     password: {
@@ -37,7 +54,7 @@ const userSchema = mongoose.Schema({
         type: Boolean
     },
     role: {
-        type: String,
+        type: ['user', 'admin'],
         required: true
     },
     partner: {

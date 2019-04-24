@@ -1,8 +1,11 @@
 const express = require('express');
 const createError = require('http-errors');
 const mongoose = require('mongoose');
+
 // const config =require('./config');
 const bodyParser = require('body-parser');
+const passport = require('passport');
+
 
 const PORT = 5000;
 
@@ -31,6 +34,7 @@ app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 
 routes(app);
+
 
 app.use((req, res, next) => {
     return next(createError(404, 'Could not find your fucking file!'));
