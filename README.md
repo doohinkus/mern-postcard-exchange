@@ -1,13 +1,6 @@
-## Basic Express Site
-This very basic Express site that uses routes, services, and bootstrap. It NOT production ready. It uses the filesystem to store data. The purpose of this project was to learn the basics of Node.
-## To Run
-Install dependencies
-```javascript
- npm install
-```
-Once they are installed, run the server:
-```javascript
- npm start
-```
+## MERN Postcard Exchange App In Development
+This is a MERN stack app for an international postcard exchange. Each month participating users will be paired. Registered users can upload images of their postcards to the postcard gallery.
 
-* Point browser to http://localhost:3000
+## More to Come
+This project is still in development.
+
