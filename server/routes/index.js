@@ -6,18 +6,23 @@ module.exports = (app) =>{
      .get(controllers.CheckAuth, controllers.Get);
 
   app.route('/AddUser')
-     .post(controllers.CheckAuth,controllers.AddUser);
+     .post(controllers.AddUser);
 
-  app.route('/AddUser')
-     .put(controllers.AddUser);
+  app.route('/EditUser/:userId')
+     .put(controllers.CheckAuth, controllers.EditUser);
 
-  app.route('/:userId')
-     .delete(controllers.CheckAuth, controllers.Delete);
+  app.route('DeleteUser/:userId')
+     .delete(controllers.CheckAuth, controllers.DeleteUser);
 
   app.route('/login')
-     .post(controllers.CheckAuth, controllers.Login);
+  //sets token in header
+  //front end needs to grab it
+  //And send in header
+     .post(controllers.Login);
 
   app.route('/favicon.ico')
      .get(controllers.Favicon);
-  
+
+  app.route('/gallery')
+     .post(controllers.CheckAuth, controllers.UploadImage, controllers.Gallery);
 }
