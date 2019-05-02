@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
+const cors = require('cors');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb){
@@ -33,6 +34,11 @@ const upload = multer({
     fileFilter
     });
 
+// const corsOptions = {
+//     origin: 'http://localhost:3000',
+//     optionsSuccessStatus: 200
+// }
+// exports.CORS = cors(corsOptions);
 
 exports.CheckAuth = (req, res, next) =>{
     const token = req.headers['x-access-token'] || req.headers['authorization'];
@@ -141,6 +147,7 @@ exports.Login = (req, res, next) => {
 }
 exports.AddUser = 
     (req, res, next) => {
+        console.log(req.body)
         User.find({'contact.email': req.body.email})
         .exec()
         .then(user => {
@@ -173,11 +180,17 @@ exports.AddUser =
                 user.save()
                     .then(result => {
                         // console.log(result);
-                        return res.json({
+                        // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+                        // allow access
+                        return res
+                        // .set('Access-Control-Allow-Origin', 'http://localhost:3000')
+                        .json({
                             route: 'POST',
                             success: 'Info added',
                             userInfo: result
-                        });
+                        })
+                        
+                        //redirect to login?
             
                     })
                     .catch(err => {
