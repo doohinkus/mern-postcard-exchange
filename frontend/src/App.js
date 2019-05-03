@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import './App.css';
+import SignIn from './components/SignIn';
+import Gallery from './components/Gallery';
+import Join from './components/Join';
+import Index from './components/Index';
 
 class App extends Component {
   constructor(props){
@@ -17,7 +22,6 @@ class App extends Component {
           headers: {
             'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json',
-            // "Content-Type": "application/x-www-form-urlencoded",
           },
           data: {
             firstname: 'Jeffy',
@@ -33,33 +37,28 @@ class App extends Component {
         })
         .then(res => console.log(res))
         .catch(error => console.log(error));
-        // const  data = "firstname=testy&lastname=faker&email=fae%40fakers.comzx&streetid=asfsf&streetname=adsfasfsdaf%20adsf&city=santa%20cruz&country=USA&postalcode=7845&password=fake&undefined=";
-
-        // const xhr = new XMLHttpRequest();
-        // xhr.withCredentials = true;
-
-        // xhr.addEventListener("readystatechange", function () {
-        //   if (this.readyState === 4) {
-        //     console.log(this.responseText);
-        //   }
-        // });
-
-        // xhr.open("POST", "http://localhost:5000/AddUser");
-        // xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        // xhr.setRequestHeader("cache-control", "no-cache");
-        // // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-        
-
-        // xhr.send(data);
     }
 
   
   render() {
     return (
-      <div className="App">
-        <h1>working</h1>
+      <Router>
+        <div className="App">
+          <h1>International Postcard Exchange</h1>
+          <Link to='/'>Home</Link> | 
+          <Link to='/gallery'>Gallery</Link> |
+          <Link to='/join'>Join</Link> | 
+          <Link to='/signin'>Sign In</Link> 
+          
+          
+          <Route path="/" exact component={Index} />
+          <Route path="/signin/" component={SignIn} />
+          <Route path="/gallery/" component={Gallery} />
+          <Route path="/join/" component={Join} />
+
+        </div>
         <button onClick={this.sendData}>Test Data</button>
-      </div>
+      </Router>
     );
   }
 }
