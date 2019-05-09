@@ -4,16 +4,17 @@ class Index extends Component {
     render(){
         return (
            <React.Fragment>
-               <h1>The International Postcard Exchange</h1>
+               <h1>Postcard Exchange</h1>
                 
                 <p>
-                    The goal of this project is to allow people to send and receive postcards from all over the world, for free. Well, almost free! The main idea is that: if you send a postcard, you will receive one back from a random participant from somewhere in the world. Many professional photographers participate in this exchange, so you may end receiving a valuable work of art! All skill levels are welcome.
+                    The earliest known picture postcard was a hand-painted in London by the writer Theodore Hook in 1840. It was addressed to himself as a prank: the picture he so meticulously painted stroke by stroke was a caraciture of his mailman.
                 </p>
                 <p>
-                    Why would you want to send a postcard to a stranger? Because, like us, there are lots of people who like to receive real mail, not the electronic waste that passes for human communication. We also enjoy good old fashioned analog photos--digital too, but analog more.
+                    This project is not about pranks, but it is about capturing that excitment and thrill of receiving a surprise in the mail. On the 15th of each month, the application will randomly pair up participants, allowing each person to view the name and address of their partner and to indicate when a postcard is sent and received. The app also includes a gallery where particpants can upload pictures of their postcards, marking the card's journey on Google Maps.  
                 </p>
+          
                 <p>
-                    The element of surprise of receiving postcards from different places in the world (many of which you probably have never heard of) can turn your walk to the mailbox into a joyous journey - and who wouldn't love that?
+                    The element of surprise of receiving postcards from different places around the planet transforms an ordinary stroll to the mailbox into an exciting adventure. Who knows? You might just make a friend. 
                 </p>
 
            </React.Fragment>

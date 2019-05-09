@@ -1,5 +1,6 @@
 import React from "react";
 import { FormGroup, Label, Input } from 'reactstrap';
+import PropTypes from "prop-types";
 const Field = props => {
     
         return(
@@ -19,4 +20,13 @@ const Field = props => {
         );
     
 }
+Field.propTypes = {
+    label: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    autocomplete: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+};
+
 export default Field;

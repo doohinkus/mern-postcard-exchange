@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Form, Card, CardTitle, CardBody } from 'reactstrap';
 import Field from "./Field";
+import PropTypes from "prop-types";
+
 
 class SignIn extends Component {
     constructor(props){
@@ -55,6 +57,10 @@ class SignIn extends Component {
             </React.Fragment>
         );
     }
+};
+SignIn.propTypes = {
+    signIn: PropTypes.func.isRequired,
+    error: PropTypes.bool,
 };
 
 export default SignIn;

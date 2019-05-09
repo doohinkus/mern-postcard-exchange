@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Button, Card, CardTitle, CardBody } from 'reactstrap';
+import PropTypes from "prop-types";
 
 const Profile = (props) => {
+    const message = (<p>Logged out</p>);
+    if (!props.userinfo) return message;
     const userinfo = (
            <React.Fragment>
                <Card >
@@ -21,19 +24,20 @@ const Profile = (props) => {
                </Card>
            
                <button onClick={props.signout}>Log Out</button>
-               <p>Signin data: {props.userinfo.message}</p>
            </React.Fragment>
     )
    
         
     return (
         <React.Fragment>
-            {props.isloggedin ? userinfo : (<p>logged out</p>)}
+            {props.isloggedin ? userinfo : message}
         </React.Fragment>
     )
             
         
     
 };
-
+Profile.propTypes = {
+    userinfo: PropTypes.object.isRequired,
+};
 export default Profile;
