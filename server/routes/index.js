@@ -14,7 +14,7 @@ module.exports = (app) =>{
   app.route('DeleteUser/:userId')
      .delete(controllers.CheckAuth, controllers.DeleteUser);
 
-  app.route('/login')
+  app.route('/Login')
   //sets token in header
   //front end needs to grab it
   //And send in header
@@ -23,6 +23,6 @@ module.exports = (app) =>{
   app.route('/favicon.ico')
      .get(controllers.Favicon);
 
-  app.route('/gallery')
+  app.route('/Gallery')
      .post(controllers.CheckAuth, controllers.UploadImage, controllers.Gallery);
 }

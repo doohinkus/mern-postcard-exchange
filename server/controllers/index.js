@@ -29,16 +29,11 @@ const upload = multer({
     storage, 
     limits: 
         { 
+            //limits to 5 megs
             fileSize: 1024*1024*5
         },
     fileFilter
     });
-
-// const corsOptions = {
-//     origin: 'http://localhost:3000',
-//     optionsSuccessStatus: 200
-// }
-// exports.CORS = cors(corsOptions);
 
 exports.CheckAuth = (req, res, next) =>{
     const token = req.headers['x-access-token'] || req.headers['authorization'];
@@ -57,15 +52,14 @@ exports.Index = (req, res, next) =>{
 exports.Favicon = (req, res, next) =>{
     return res.sendStatus(204);
 }
+//must match params coming in
 exports.UploadImage = upload.single('galleryImage');
-// exports.UploadImage = upload(req, res, err => {
-//         if (err) return res.json({message: "Error uploading file"});
-//         console.log("MULTER: ", req.file)
-//     });
+// exports.UploadImage = upload.none();
 
 
 
 exports.Gallery = (req, res, next) =>{
+    console.log(req.body)
     // console.log("TYPES: ", req.file.filename, !req.file.filename);
     //   console.log(typeof req.file == 'undefined')
         if(typeof req.file == 'undefined') return res.json({message: "Problem uploading image"})
@@ -120,7 +114,7 @@ exports.Login = (req, res, next) => {
             if(err) console.log(err);
             if (result){
                 jwt.sign(
-                    {email: user.contact.email, userId: user._id}, 
+                    {email: user.contact.email, userid: user._id}, 
                     key,
                     {expiresIn: '1h'}, 
                     (err, token) => {
@@ -129,10 +123,17 @@ exports.Login = (req, res, next) => {
                         //set token in header
                         //client needs to grab this info
                         .set('Authorization', `Bearer ${token}`)
-                        .json({token, message: "Success", email: user.contact.email, userId: user._id});
+                        .json({
+                            token, 
+                            message: "Success", 
+                            // email: user.contact.email, 
+                            // userid: user._id,
+                            userinfo: user
+
+                        });
                     });
             } else{
-                return res.status(404).json({error: `Error occured`})
+                return res.status(404).json({error: `Error occured`, message: 'User not found'})
             }
           
         });
@@ -140,58 +141,53 @@ exports.Login = (req, res, next) => {
     .catch(err =>{    
         console.error(err);
         return res.json({
-            error: `An Error occured: ${err}`  
+            error: `An Error occured: ${err}`,
+            message: 'Login Failed'
         })
     });
         
 }
 exports.AddUser = 
     (req, res, next) => {
-        console.log(req.body)
-        User.find({'contact.email': req.body.email})
+        // console.log(req.body)
+        // console.log(req.body.userinfo)
+        User.find({'contact.email': req.body.userinfo.email})
         .exec()
         .then(user => {
-            if (user.length >= 1) return res.status(422).json({error: 'duplicate information'});
-            bcrypt.hash(req.body.password, 10, (err, hash) => {
+            if (user.length >= 1) return res.json({message: 'Duplicate information'});
+            bcrypt.hash(req.body.userinfo.password, 10, (err, hash) => {
                 if (err) return res.status(500).json({error: `Hashing error: ${err}`});
                 
                 const user = new User({
                     _id: mongoose.Types.ObjectId(),
-                    name: {
-                        first: req.body.firstname,
-                        last: req.body.lastname
-                    },
+                    firstname: req.body.userinfo.firstname,
+                    lastname: req.body.userinfo.lastname,
                     contact: {
-                        email: req.body.email,
+                        email: req.body.userinfo.email,
                         address: {
-                            streetId: req.body.streetid,
-                            streetName: req.body.streetname,
-                            city: req.body.city,
-                            country: req.body.country,
-                            postalCode: req.body.postalcode
+                            streetname: req.body.userinfo.streetname,
+                            streetaddress: req.body.userinfo.streetaddress,
+                            city: req.body.userinfo.city,
+                            state: req.body.userinfo.state,
+                            country: req.body.userinfo.country,
+                            postalcode: req.body.userinfo.postalcode
                         }
                     },
                     password: hash,
-                    isPaired: false,
-                    isParticipating: false,
+                    ispaired: false,
+                    isparticipating: false,
                     role: 'user',
                     partner: null
                 })
                 user.save()
                     .then(result => {
-                        // console.log(result);
-                        // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
-                        // allow access
+                
                         return res
-                        // .set('Access-Control-Allow-Origin', 'http://localhost:3000')
                         .json({
                             route: 'POST',
-                            success: 'Info added',
-                            userInfo: result
+                            message: 'Success',
+                            userinfo: result
                         })
-                        
-                        //redirect to login?
-            
                     })
                     .catch(err => {
                         console.error(err);

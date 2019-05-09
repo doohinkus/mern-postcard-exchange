@@ -2,15 +2,13 @@ const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
     _id: mongoose.Types.ObjectId,
-    name: {
-        first: {
-            type: String,
-            required: [true, "Must include first name"]
-        },
-        last: {
-            type: String,
-            required: [true, "Must include last name"]
-        }
+    firstname: {
+        type: String,
+        required: [true, "Must include first name"]
+    },
+    lastname: {
+        type: String,
+        required: [true, "Must include last name"]
     },
     contact: {
         email: {
@@ -20,11 +18,7 @@ const userSchema = mongoose.Schema({
             match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
         },
         address: {
-            streetId: {
-                type: String,
-                required: true
-            },
-            streetName: {
+            streetaddress: {
                 type: String,
                 required: true
             },
@@ -32,11 +26,15 @@ const userSchema = mongoose.Schema({
                 type: String,
                 required: true
             },
+            state: {
+                type: String,
+                required: true
+            },
             country: {
                 type: String,
                 required: true
             },
-            postalCode: {
+            postalcode: {
                 type: Number,
                 required: true
             },
@@ -46,11 +44,11 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    isPaired: {
+    ispaired: {
         type: Boolean,
         required: true
     },
-    isParticipating: {
+    isparticipating: {
         type: Boolean
     },
     role: {

@@ -5,6 +5,8 @@ const gallerySchema = mongoose.Schema({
     // sender: String,
     // recipient: String,
     owner: String,
+    origin: String,
+    destination: String,
     url: String
 });
 
