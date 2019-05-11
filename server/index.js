@@ -2,7 +2,9 @@ const express = require('express');
 const createError = require('http-errors');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 
+const routes = require('./routes');
 // const config =require('./config');
 const bodyParser = require('body-parser');
 
@@ -13,8 +15,10 @@ const PORT = 5000;
 
 
 const app = express();
+// console.log(__dirname + '/uploads');
+app.use('/static', express.static(path.join(__dirname, '/uploads')));
 
-mongoose.connect('mongodb://127.0.0.1:27017/postcards', {useNewUrlParser: true})
+const db = mongoose.connect('mongodb://127.0.0.1:27017/postcards', {useNewUrlParser: true})
 .then(()=>{
     console.log('Connected')
 })
@@ -25,7 +29,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/postcards', {useNewUrlParser: true})
 
 
 app.use(cors());
-const routes = require('./routes');
 
 
 
@@ -35,19 +38,22 @@ const routes = require('./routes');
 
 
 
-
-app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 
+// app.use(express.static('uploads'));
 routes(app);
+// app.get('/', routes);
+// app.use('/uploads', express.static(__dirname + '/uploads'));
+// app.use('/public', express.static(__dirname + '/public'));
+// app.use(routes);
 
 
 
 
-app.use((req, res, next) => {
-    return next(createError(404, 'Could not find your fucking file!'));
-});
+// app.use((req, res, next) => {
+//     return next(createError(404, 'Could not find your fucking file!'));
+// });
 
 app.listen(PORT, ()=>{
     console.log(`App listening on ${PORT}`);

@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
-const cors = require('cors');
+// const cors = require('cors');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb){
@@ -41,8 +41,9 @@ exports.CheckAuth = (req, res, next) =>{
         res.token = token.split(" ")[1];
         next();
     } else{
-        res.json({message: 'Forbidden'})
+         return res.json({message: 'This Route is Forbidden'})
     }
+    // next();
 }
 exports.Index = (req, res, next) =>{
     return res.json({
@@ -56,9 +57,19 @@ exports.Favicon = (req, res, next) =>{
 exports.UploadImage = upload.single('galleryImage');
 // exports.UploadImage = upload.none();
 
+exports.GalleryImages = (req, res, next) => {
+    Gallery.find({})
+        .exec()
+        .then(images => {
+            // console.log("i ", images);
+            return res.json(images)
+        })
+        .catch(err => console.log("GALLERY ERROR::::: ", err));
+    //send data to frontend
+}
 
 
-exports.Gallery = (req, res, next) =>{
+exports.AddImage = (req, res, next) =>{
     console.log(req.body)
     // console.log("TYPES: ", req.file.filename, !req.file.filename);
     //   console.log(typeof req.file == 'undefined')
@@ -81,8 +92,8 @@ exports.Gallery = (req, res, next) =>{
               image.save()
                   .then(result => {
                       return res.json({
-                          route: 'GALLERY',
                           success: `Gallery Photo  ${req.file.filename} added`,
+                          message: "Success",
                           image
                       });
                   })
@@ -92,11 +103,9 @@ exports.Gallery = (req, res, next) =>{
                           error: `An Error occured: ${err}`  
                       })
                   });
-            //   return res.json({message: "Error no image supplied"});
             }
           });
-   
-    // return res.json({message: 'Error. No image provided'});
+
 }
 exports.Get = (req, res, next) =>{
     console.log(req.token)
