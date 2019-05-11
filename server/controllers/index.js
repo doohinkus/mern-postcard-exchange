@@ -82,18 +82,23 @@ exports.AddImage = (req, res, next) =>{
               console.log("TOKEN ERROR: ", err); 
               return res.json({message: "Error with token."})
             }else{
-            //   console.log("USER ID:", verifiedToken.userId);
+              console.log("USER ID:", verifiedToken);
               //write to gallery document
               const image = new Gallery({
                   _id: mongoose.Types.ObjectId(),
                   url: req.file.filename,
-                  owner: verifiedToken.userId
+                  owner: verifiedToken.userid,
+                  senderpostalcode: req.body.senderpostalcode,
+                  receiverpostalcode: req.body.receiverpostalcode
               })
               image.save()
                   .then(result => {
                       return res.json({
                           success: `Gallery Photo  ${req.file.filename} added`,
                           message: "Success",
+                          senderpostalcode: req.body.senderpostalcode,
+                          receiverpostalcode: req.body.receiverpostalcode,
+                          owner: verifiedToken.userid,
                           image
                       });
                   })

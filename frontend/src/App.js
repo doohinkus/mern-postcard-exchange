@@ -17,7 +17,8 @@ class App extends Component {
       userinfo: [],
       authorized: 0,
       error: 0,
-      isloggedin: 0
+      isloggedin: 0,
+      images: []
     }
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.addUser = this.addUser.bind(this);
@@ -25,6 +26,7 @@ class App extends Component {
     this.signOut = this.signOut.bind(this);
     this.addUser = this.addUser.bind(this);
     this.addImage = this.addImage.bind(this);
+    this.getImages = this.getImages.bind(this);
   }
   toggleNavbar() {
     this.setState({
@@ -55,38 +57,62 @@ class App extends Component {
         })
         .catch(error => console.log(error));
   }
-  addImage(imageinfo){
-    // console.log(imageinfo, " ", this.state.userinfo.token);
-     console.log(imageinfo);
-     let formdata = new FormData();
-     formdata.append("galleryImage", imageinfo);
+  getImages(){
+    axios({
+      method: 'get',
+      url: "http://localhost:5000/GalleryImages",
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(res => {
+      //
+     console.log(res.data);
+     this.setState({
+       images: res.data
+     })
+    })
+    .catch(error => console.log(error));
 
+  }
+  addImage(formdata){
+    // console.log(imageinfo, " ", this.state.userinfo.token);
+     console.log("IMAGE INFO APP: ", formdata);
+     
       // data.append('filename', this.fileName.value);
-        axios({
-          method: 'post',
-          url: "http://localhost:5000/Gallery",
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            // 'Content-Type': `multipart/form-data; boundary=---XXX`,
-            'x-access-token': this.state.userinfo.token
-          },
-          //get from form
-          data: formdata
+      const formData = new FormData();
+      formData.set("galleryImage", formdata.image);
+      formData.set("senderpostalcode", formdata.senderpostalcode);
+      formData.set("receiverpostalcode", formdata.receiverpostalcode);
+      
+      axios({
+        method: 'post',
+        url: "http://localhost:5000/AddImage",
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          // 'Content-Type': `multipart/form-data; boundary=---XXX`,
+          'x-access-token': this.state.userinfo.token
+        },
+        //get from form
+        data: formData
+        
+      })
+      .then(res => {
+        console.log(res)
+        this.setState({
+          // authorized: 1,
+          // isloggedin: 1,
+          // userinfo: res.data
         })
-        .then(res => {
-          console.log(res)
-          this.setState({
-            // authorized: 1,
-            // isloggedin: 1,
-            // userinfo: res.data
-          })
-        })
-        .catch(error => console.log(error));
+      })
+      .catch(error => console.log(error));
   }
   signOut(){
     this.setState({
       authorized: 0,
       isloggedin: 0,
+      userinfo: []
     })
   }
   
@@ -114,16 +140,21 @@ class App extends Component {
           userinfo: res.data,
           error: 0
         });
-      }else{
-        this.setState({
-          error: 'Login Error',
-          authorized: 0,
-          isloggedin: 0,
-        });
-      }
-      console.log(this.state.error)
+      } 
+      // else{
+        
+      // }
+      // console.log(this.state.error)
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      console.log("asfdasdf ",error," asdfasddf");
+      this.setState({
+        error: 1,
+        authorized: 0,
+        isloggedin: 0,
+        userinfo: []
+      });
+    });
   }
   
   render() {
@@ -148,7 +179,6 @@ class App extends Component {
           /> 
            | 
           
-  
           
           <Link to='/gallery'>Gallery</Link>  
           
@@ -169,9 +199,12 @@ class App extends Component {
             } />
           <Route path="/gallery" component={() => (
             <Gallery 
-            isloggedin={this.state.isloggedin} 
-            userinfo={this.state.userinfo}
-            addimage={this.addImage} />)
+              isloggedin={this.state.isloggedin} 
+              userinfo={this.state.userinfo}
+              getimages={this.getImages}
+              images={this.state.images}
+              addimage={this.addImage} 
+            />)
           } />
           <Route path="/profile" component={() => (<Profile 
             signout={this.signOut} 

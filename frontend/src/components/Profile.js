@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import { Button, Card, CardTitle, CardBody } from 'reactstrap';
+import React from 'react';
+import { Card, CardTitle, CardBody, Button } from 'reactstrap';
+import Authorized from "./Authorized";
 import PropTypes from "prop-types";
 
 const Profile = (props) => {
@@ -23,15 +24,17 @@ const Profile = (props) => {
                    </CardBody>
                </Card>
            
-               <button onClick={props.signout}>Log Out</button>
+               <Button onClick={props.signout}>Log Out</Button>
            </React.Fragment>
     )
    
         
     return (
-        <React.Fragment>
-            {props.isloggedin ? userinfo : message}
-        </React.Fragment>
+        <Authorized 
+            isloggedin={props.isloggedin}
+            authorized={userinfo}
+            default={message}
+        />
     )
             
         

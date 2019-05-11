@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from "prop-types";
 import GalleryAddImage from './GalleryAddImage';
+import Authorized from './Authorized';
+import GalleryShowImages from './GalleryShowImages';
 
 
 const Gallery = props => {
@@ -10,14 +12,14 @@ const Gallery = props => {
     
     return (
         <React.Fragment>
-            
-            <h1>Gallery</h1>
-            {props.isloggedin ? (<GalleryAddImage addimage={props.addimage} />) : (message)}
-    
-            
-
+            <Authorized 
+                isloggedin={props.isloggedin}
+                authorized={<GalleryAddImage addimage={props.addimage} />}
+                default={message}
+            />
+         <GalleryShowImages showimages={props.showimages} getimages={props.getimages} images={props.images} /> 
+          
         </React.Fragment>
-        
     );
     
 };

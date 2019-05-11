@@ -31,7 +31,7 @@ class SignIn extends Component {
                     <Card>
                         <CardBody>
                             <CardTitle>Sign In</CardTitle>
-                            {!this.props.error ? "" : (<div className="alert alert-danger">{this.props.error}: Incorrect email or password</div>)}
+                            {this.props.error ? (<div className="alert alert-danger">Incorrect email or password</div>) : ""}
                             <Field 
                                 title="Email"
                                 label="email"
