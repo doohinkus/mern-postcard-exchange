@@ -78,7 +78,7 @@ class App extends Component {
   }
   addImage(formdata){
     // console.log(imageinfo, " ", this.state.userinfo.token);
-     console.log("IMAGE INFO APP: ", formdata);
+    //  console.log("IMAGE INFO APP: ", formdata);
      
       // data.append('filename', this.fileName.value);
       const formData = new FormData();
@@ -147,7 +147,7 @@ class App extends Component {
       // console.log(this.state.error)
     })
     .catch(error => {
-      console.log("asfdasdf ",error," asdfasddf");
+      // console.log("asfdasdf ",error," asdfasddf");
       this.setState({
         error: 1,
         authorized: 0,
