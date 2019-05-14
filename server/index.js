@@ -51,9 +51,9 @@ routes(app);
 
 
 
-// app.use((req, res, next) => {
-//     return next(createError(404, 'Could not find your fucking file!'));
-// });
+app.use((req, res, next) => {
+    return next(createError(404, 'Could not find your fucking file!'));
+});
 
 app.listen(PORT, ()=>{
     console.log(`App listening on ${PORT}`);
