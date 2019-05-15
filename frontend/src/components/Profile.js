@@ -9,6 +9,7 @@ const Profile = (props) => {
     if (!props.userinfo) return message;
     const userinfo = (
            <React.Fragment>
+               {props.editlink}
                <ProfileRow
                     title="Avatar"
                >
@@ -53,17 +54,6 @@ const Profile = (props) => {
                </ProfileRow>
                <Button onClick={props.signout}>Log Out</Button>
              
-               {/* <Card >
-                   <CardTitle><h2>{props.userinfo.firstname}</h2></CardTitle>
-                   <CardBody>
-                        <p>Particpating in this month's postcard exchange: </p>
-                        <p>Paired up: <strong>{props.userinfo.ispaired ? "Yes" : "No"}</strong></p>
-                        <p>Address: </p>
-                   
-                   </CardBody>
-               </Card>
-           
-               <Button onClick={props.signout}>Log Out</Button> */}
            </React.Fragment>
     )
    

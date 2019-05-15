@@ -7,6 +7,7 @@ import Gallery from './components/Gallery';
 import Join from './components/Join';
 import Index from './components/Index';
 import Profile from './components/Profile';
+import EditProfile from './components/EditProfile';
 import Authorized from './components/Authorized';
 //event -state change - rerender
 class App extends Component {
@@ -156,6 +157,9 @@ class App extends Component {
       });
     });
   }
+  componentDidMount(){
+    this.getImages();
+  }
   
   render() {
     return (
@@ -207,11 +211,13 @@ class App extends Component {
             />)
           } />
           <Route path="/profile" component={() => (<Profile 
+            editlink={(<Link to="/edit">Edit</Link>)} 
             signout={this.signOut} 
             userinfo={this.state.userinfo.userinfo} 
             isloggedin={this.state.isloggedin} />)
           } />
-    
+          <Route path="/edit" component={() => (<EditProfile 
+            userinfo={this.state.userinfo} />)} />
           <Route path="/join" component={ 
             () =>
             {
