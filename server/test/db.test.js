@@ -25,6 +25,11 @@ describe('Gallery collection', () => {
             .then(() => done());
         
     });
+    afterEach(done => {
+        // mongoose.connection.collections['users'].deleteOne();
+        mongoose.connection.collections['galleries'].deleteOne();
+        done();
+    })
   
     it('saves a record to the gallery', done => {
         Gallery.findOne({
@@ -80,27 +85,49 @@ describe('Users collection', () => {
         user.save((err, result) => {
                 if (err) console.log(err);
                 done();
-        })
-         
-        
-    });
-    it('does CRUD on the user to the collection', done =>{
-        User.findOne({
-            firstname: "Rafael"
-        }, (err, result) => {
-            if(err) console.log("FIND ONE ERRO::::> ", err);
-            expect(result.firstname).to.equal("Rafael");
         });
+    });
+    afterEach(done => {
+        mongoose.connection.collections['users'].deleteOne();
+        done();
+    })
+    it('does CRUD on the user to the collection', done =>{
+        it('finds a record in the collection', () => {
+            User.findOne({
+                firstname: "Rafael"
+            }, (err, result) => {
+                if(err) console.log("FIND ONE ERRO::::> ", err);
+                expect(result.firstname).to.equal("Rafael");
+            });
+        });
+        done();
+    });
+    it('edits a particular record in the collection', (done)=> {
         User.findOne({
             firstname: "Rafael"
         }, (err, result) => {
             if(err) console.log("FIND ONE ERRO::::> ", err);
+            // console.log(result)
             result.firstname = "Darren"
             expect(result.firstname).to.equal("Darren");
         });
         done();
-        
-       
+    });
+    it('deletes a particular record in the collection', (done)=> {
+        const query = {
+            firstname: "Rafael"
+        }
+        User.findOneAndDelete(query, (err, result) => {
+            if(err) console.log("FIND ONE ERRO::::> ", err);
+            //  console.log(result);
+             User.findOne(query, (err, result) => {
+                 console.log("result of find", );
+                //  if(err) console.log(err);
+                 console.log(result)
+                 expect(result).to.equal(null)
+             })
+        });
+        done();
     });
 
 });

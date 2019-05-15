@@ -15,8 +15,8 @@ before(function(done){
 after(done => {
     //delete user and gallery collections
     // mongoose.connection.collections.forEach(col => col.deleteOne())
-    mongoose.connection.collections['users'].deleteOne();
-    mongoose.connection.collections['galleries'].deleteOne();
+    // mongoose.connection.collections['users'].deleteOne();
+    // mongoose.connection.collections['galleries'].deleteOne();
 
     mongoose.disconnect(()=> done());
 });
