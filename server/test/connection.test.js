@@ -1,26 +1,22 @@
 const mongoose = require('mongoose');
-//make sure mongod is running BEOFRE TESTING!!!!
+//make sure mongod is running BEFORE TESTING!!!!
 
 mongoose.Promise = global.Promise;
 
 before(function(done){
-    mongoose.connect('mongodb://localhost/testdaroo',  { useNewUrlParser: true, useCreateIndex: true });
+    mongoose.connect('mongodb://localhost/postcardtest',  { useNewUrlParser: true, useCreateIndex: true });
     mongoose.connection.once('open', function(){
         console.log("Connection successful!!!!");
         done();
     })
     .on('error', err => console.log(err))
 
-})
+});
+after(done => {
+    //delete user and gallery collections
+    // mongoose.connection.collections.forEach(col => col.deleteOne())
+    mongoose.connection.collections['users'].deleteOne();
+    mongoose.connection.collections['galleries'].deleteOne();
 
-// beforeEach(function(done){
-//     //LOWERCASE AND PLURAL!!!!
-//     // mongoose.connection.collections.galleries.drop(err=>{
-//     //     if (err) console.log('ERROR DROPPING GALLERY COLLECTION::::> ');
-//     //     done();
-//     // });
-//     // mongoose.connection.collections.users.drop(err=>{
-//     //     if (err) console.log('ERROR DROPPING USERS COLLECTION::::> ');
-//     //     done();
-//     // });
-// })
+    mongoose.disconnect(()=> done());
+});
