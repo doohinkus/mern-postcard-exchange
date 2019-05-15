@@ -121,9 +121,7 @@ describe('Users collection', () => {
             if(err) console.log("FIND ONE ERRO::::> ", err);
             //  console.log(result);
              User.findOne(query, (err, result) => {
-                 console.log("result of find", );
-                //  if(err) console.log(err);
-                 console.log(result)
+                 if(err) console.log(err);
                  expect(result).to.equal(null)
              })
         });
