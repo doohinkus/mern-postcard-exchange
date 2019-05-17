@@ -14,15 +14,15 @@ module.exports = (app) =>{
    //And send it back in the header
       .post(controllers.Login);
       
-   app.route('/:userId')
-   .get(controllers.CheckAuth, controllers.Get);
+   // app.route('/:userId')
+   // .get(controllers.CheckAuth, controllers.Get);
    
        
 
-   app.route('/EditUser/:userId')
+   app.route('/EditUser')
       .put(controllers.CheckAuth, controllers.EditUser);
 
-   app.route('DeleteUser/:userId')
+   app.route('DeleteUser')
       .delete(controllers.CheckAuth, controllers.DeleteUser);
 
 

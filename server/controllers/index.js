@@ -39,7 +39,15 @@ exports.CheckAuth = (req, res, next) =>{
     const token = req.headers['x-access-token'] || req.headers['authorization'];
     if(typeof token !== 'undefined') {
         res.token = token.split(" ")[1];
-        next();
+        //verify token
+        jwt.verify(token,key,function(err,verifiedToken){
+            if(err) return res.json({message: "Error with token."});
+            console.log("USER ID:", verifiedToken);
+            //pass verified token to routes
+            res.verifiedToken = verifiedToken;
+            //next only gets hit when token is verified
+            next();
+        });
     } else{
          return res.json({message: 'This Route is Forbidden'})
     }
@@ -70,46 +78,35 @@ exports.GalleryImages = (req, res, next) => {
 
 
 exports.AddImage = (req, res, next) =>{
-    console.log(req.body)
-    // console.log("TYPES: ", req.file.filename, !req.file.filename);
-    //   console.log(typeof req.file == 'undefined')
-        if(typeof req.file == 'undefined') return res.json({message: "Problem uploading image"})
-        //decode token to get user id
-        const token = req.headers['x-access-token'] || req.headers['authorization'];
-        // console.log("Token: ", token);
-        jwt.verify(token,key,function(err,verifiedToken){
-            if(err){
-              console.log("TOKEN ERROR: ", err); 
-              return res.json({message: "Error with token."})
-            }else{
-              console.log("USER ID:", verifiedToken);
-              //write to gallery document
-              const image = new Gallery({
-                  _id: mongoose.Types.ObjectId(),
-                  url: req.file.filename,
-                  owner: verifiedToken.userid,
-                  senderpostalcode: req.body.senderpostalcode,
-                  receiverpostalcode: req.body.receiverpostalcode
-              })
-              image.save()
-                  .then(result => {
-                      return res.json({
-                          success: `Gallery Photo  ${req.file.filename} added`,
-                          message: "Success",
-                          senderpostalcode: req.body.senderpostalcode,
-                          receiverpostalcode: req.body.receiverpostalcode,
-                          owner: verifiedToken.userid,
-                          image
-                      });
-                  })
-                  .catch(err => {
-                      console.error(err);
-                      return res.json({
-                          error: `An Error occured: ${err}`  
-                      })
-                  });
-            }
-          });
+    console.log("token: ", res.verifiedToken);
+    if(!req.file || !req.body.senderpostalcode || !req.body.receiverpostalcode){
+        return res.json({message: "Error with form data."})
+    }  
+
+    const image = new Gallery({
+        _id: mongoose.Types.ObjectId(),
+        url: req.file.filename,
+        owner: res.verifiedToken.userid,
+        senderpostalcode: req.body.senderpostalcode,
+        receiverpostalcode: req.body.receiverpostalcode
+    })
+    image.save()
+        .then(result => {
+            return res.json({
+                success: `Gallery Photo  ${req.file.filename} added`,
+                message: "Success",
+                senderpostalcode: req.body.senderpostalcode,
+                receiverpostalcode: req.body.receiverpostalcode,
+                owner: res.verifiedToken.userid,
+                image
+            });
+        })
+        .catch(err => {
+            console.error(err);
+            return res.json({
+                error: `An Error occured: ${err}`  
+            })
+        });
 
 }
 exports.Get = (req, res, next) =>{
@@ -120,15 +117,17 @@ exports.Get = (req, res, next) =>{
 }
 
 exports.Login = (req, res, next) => {
-    User.findOne({'contact.email': req.body.email})
-    .exec()
-    .then(user => {
+    console.log(req.body.email, req.body.password);
+    // return res.json({ email: req.body.email })
+    User.findOne({email: req.body.email}, (err, user) => {
+        if(err) return res.json({error: err});
+        console.log(user);
         if (user.length < 1) return res.status(404).json({error: `Login failed`});
         bcrypt.compare(req.body.password, user.password, (err, result) =>{
             if(err) console.log(err);
             if (result){
                 jwt.sign(
-                    {email: user.contact.email, userid: user._id}, 
+                    {email: user.email, userid: user._id}, 
                     key,
                     {expiresIn: '1h'}, 
                     (err, token) => {
@@ -152,20 +151,23 @@ exports.Login = (req, res, next) => {
           
         });
     })
-    .catch(err =>{    
-        console.error(err);
-        return res.json({
-            error: `An Error occured: ${err}`,
-            message: 'Login Failed'
-        })
-    });
+   
+    // .catch(err =>{    
+    //     console.error(err);
+    //     return res.json({
+    //         error: `An Error occured: ${err}`,
+    //         message: 'Login Failed'
+    //     })
+    // });
+   
         
 }
 exports.AddUser = 
     (req, res, next) => {
         // console.log(req.body)
-        // console.log(req.body.userinfo)
-        User.find({'contact.email': req.body.userinfo.email})
+        console.log(req.body.userinfo)
+        // User.find({'contact.email': req.body.userinfo.email})
+        User.find({ email : req.body.userinfo.email})
         .exec()
         .then(user => {
             if (user.length >= 1) return res.json({message: 'Duplicate information'});
@@ -176,17 +178,17 @@ exports.AddUser =
                     _id: mongoose.Types.ObjectId(),
                     firstname: req.body.userinfo.firstname,
                     lastname: req.body.userinfo.lastname,
-                    contact: {
-                        email: req.body.userinfo.email,
-                        address: {
-                            streetname: req.body.userinfo.streetname,
-                            streetaddress: req.body.userinfo.streetaddress,
-                            city: req.body.userinfo.city,
-                            state: req.body.userinfo.state,
-                            country: req.body.userinfo.country,
-                            postalcode: req.body.userinfo.postalcode
-                        }
-                    },
+                    // contact: {
+                    email: req.body.userinfo.email,
+                        // address: {
+                    streetname: req.body.userinfo.streetname,
+                    streetaddress: req.body.userinfo.streetaddress,
+                    city: req.body.userinfo.city,
+                    state: req.body.userinfo.state,
+                    country: req.body.userinfo.country,
+                    postalcode: req.body.userinfo.postalcode,
+                        // }
+                    // },
                     password: hash,
                     ispaired: false,
                     isparticipating: false,
@@ -215,12 +217,23 @@ exports.AddUser =
   
     
 }
-// protected
+// protected PUT REQUEST!!!!!!!
 exports.EditUser = (req, res, next) =>{
-    console.log(req.token)
-    return res.json({
-        route: 'Edit User'
+    //search by id from verified token
+    const query = {
+        _id: res.verifiedToken.userid
+    }
+    console.log("BODY: ", req.body.userinfo);
+    // update should only have values that change
+    
+    // console.log(req.body);
+    // return res.json({ query, update})
+    User.findOneAndUpdate(query, req.body.userinfo, {upsert:true}, function(err, result){
+        if (err) return res.send(500, { error: err });
+        console.log(result);
+        return res.json({message: `user: ${req.body.firstname} successfully updated`, userinfo: result});
     });
+    
 }
 // protected
 exports.DeleteUser = (req, res, next) =>{
