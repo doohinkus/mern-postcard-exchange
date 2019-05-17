@@ -78,9 +78,12 @@ exports.GalleryImages = (req, res, next) => {
 
 
 exports.AddImage = (req, res, next) =>{
-    console.log("token: ", res.verifiedToken);
+    // console.log("token: ", res.verifiedToken);
+    // return res.json({token: "asdfds"});
+    // next();
+    
     if(!req.file || !req.body.senderpostalcode || !req.body.receiverpostalcode){
-        return res.json({message: "Error with form data."})
+        return res.json({message: "Error with form data.", token: res.verifiedToken})
     }  
 
     const image = new Gallery({
@@ -98,6 +101,7 @@ exports.AddImage = (req, res, next) =>{
                 senderpostalcode: req.body.senderpostalcode,
                 receiverpostalcode: req.body.receiverpostalcode,
                 owner: res.verifiedToken.userid,
+                // token: res.verifiedToken,
                 image
             });
         })
@@ -137,6 +141,7 @@ exports.Login = (req, res, next) => {
                         //client needs to grab this info
                         .set('Authorization', `Bearer ${token}`)
                         .json({
+                            //set token for app
                             token, 
                             message: "Success", 
                             // email: user.contact.email, 
@@ -197,7 +202,7 @@ exports.AddUser =
                 })
                 user.save()
                     .then(result => {
-                
+                //set token???
                         return res
                         .json({
                             route: 'POST',
@@ -230,8 +235,38 @@ exports.EditUser = (req, res, next) =>{
     // return res.json({ query, update})
     User.findOneAndUpdate(query, req.body.userinfo, {upsert:true}, function(err, result){
         if (err) return res.send(500, { error: err });
-        console.log(result);
-        return res.json({message: `user: ${req.body.firstname} successfully updated`, userinfo: result});
+        // console.log(result);
+        // return updated record
+        User.findOne(query, (err, user) => {
+            console.log("second query, ", user);
+            if (user){
+                jwt.sign(
+                    {email: user.email, userid: user._id}, 
+                    key,
+                    {expiresIn: '1h'}, 
+                    (err, token) => {
+                        if (err) console.log(err);
+                        return res
+                        //set token in header
+                        //client needs to grab this info
+                        .set('Authorization', `Bearer ${token}`)
+                        .json({
+                            //sends token to app
+                            token, 
+                            message: "Success", 
+                            // email: user.contact.email, 
+                            // userid: user._id,
+                            userinfo: user
+
+                        });
+                    });
+            } else{
+                return res.status(404).json({error: `Error occured`, message: 'User not found'})
+            }
+            // return res.json({message: "Success", userinfo: result});
+        });
+    
+        // return res.json({message: `user: ${req.body.firstname} successfully updated`, userinfo: result});
     });
     
 }
