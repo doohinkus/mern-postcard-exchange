@@ -76,6 +76,36 @@ exports.GalleryImages = (req, res, next) => {
     //send data to frontend
 }
 
+//comments find the image push into to image contents array
+exports.AddComment = (req, res, next) =>{
+    //find image by _id
+    // return res.json({message: "Comment route working", data: req.body});
+    console.log(req.body._id)
+    const query = {
+        _id: req.body._id
+    }
+    const data = {
+        _id: mongoose.Types.ObjectId(),
+        author: req.body.author,
+        posted: new Date().toISOString(), 
+        text: req.body.comment
+    }
+    Gallery.findOneAndUpdate(query, { $push : {comments: data }}, {upsert:true}, (err, result) => {
+        if(err) return res.json({message: "error making comment", err});
+        return res.json({message: "Sucess", result});
+
+    });
+       
+        // .catch(err => {
+        //     console.log(err)
+        //     return res.json({message: "Error occured while adding comment."})
+        // })
+
+}
+// exports.ShowComments = (req, res, next) =>{
+//     //call this in show images???
+
+// }
 
 exports.AddImage = (req, res, next) =>{
     // console.log("token: ", res.verifiedToken);

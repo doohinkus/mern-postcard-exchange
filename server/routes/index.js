@@ -4,20 +4,23 @@ module.exports = (app) =>{
 
    app.route('/GalleryImages')
        .get(controllers.GalleryImages);
-
-   app.route('/AddUser')
-      .post(controllers.AddUser);
-      
-   app.route('/Login')
-   //sets token in header 
-   //front end needs to grab token
-   //And send it back in the header
-      .post(controllers.Login);
-      
-   // app.route('/:userId')
-   // .get(controllers.CheckAuth, controllers.Get);
    
        
+       app.route('/AddUser')
+       .post(controllers.AddUser);
+       
+       app.route('/Login')
+       //sets token in header 
+       //front end needs to grab token
+       //And send it back in the header
+       .post(controllers.Login);
+       
+       // app.route('/:userId')
+       // .get(controllers.CheckAuth, controllers.Get);
+       
+       
+   app.route('/AddComment')
+      .post(/*controllers.CheckAuth,*/ controllers.AddComment);
 
    app.route('/EditUser')
       .put(controllers.CheckAuth, controllers.EditUser);

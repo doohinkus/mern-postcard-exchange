@@ -1,5 +1,13 @@
 const mongoose = require('mongoose');
 // const Schema = mongoose.Schema;
+const commentSchema = mongoose.Schema({
+    // _id: mongoose.Types.ObjectId,
+    // sender: String,
+    // recipient: String,
+    posted: Date,
+    author: String,
+    text: String
+});
 
 const gallerySchema = mongoose.Schema({
     _id: mongoose.Types.ObjectId,
@@ -7,12 +15,7 @@ const gallerySchema = mongoose.Schema({
     senderpostalcode: String,
     receiverpostalcode: String,
     url: String,
-    comments: [{
-        _id: mongoose.Types.ObjectId,
-        posted: Date,
-        author: String, 
-        text: String
-    }]
+    comments: [commentSchema]
 });
 
 module.exports = mongoose.model('Gallery', gallerySchema);
