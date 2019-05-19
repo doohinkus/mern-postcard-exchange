@@ -92,7 +92,14 @@ exports.AddComment = (req, res, next) =>{
     }
     Gallery.findOneAndUpdate(query, { $push : {comments: data }}, {upsert:true}, (err, result) => {
         if(err) return res.json({message: "error making comment", err});
-        return res.json({message: "Sucess", result});
+        // send back updated list of images
+        Gallery.find({})
+            .exec()
+            .then(images => {
+                console.log(images);
+                return res.json({message: "Success", images});
+            })
+            .catch(err => res.json({message: "Error adding comment"}));
 
     });
        
