@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import { withRouter } from "react-router-dom";
 import ProfileRow from "./ProfileRow";
 
 class EditProfile extends Component {
@@ -6,13 +7,34 @@ class EditProfile extends Component {
         //only takes userdata object
         super(props);
         this.state = {
-            formdata: {}
+        //   isediting: true,
         }
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleFormChange = this.handleFormChange.bind(this);
+    }
+   
+    handleSubmit(e){
+        e.preventDefault();
+    
+//send data to app
+        console.log(this.state);
+        this.props.edituser(this.state);
+        this.props.history.push('/profile');
+    }
+    handleFormChange(e){
+        //make state mirror data
+ 
+        this.setState({
+           [e.target.name] : e.target.value 
+        });
     }
     render(){
+        // if(!this.state.isediting) return (this.props.redirect)
         return(
             <div className="p-3 bg-light rounded">
                 <h2>Edit Profile</h2>
+                <form onSubmit={this.handleSubmit}>
+
                  <ProfileRow title="First Name:">   
                       <div className="form-group">
                           <input className="form-control"  
@@ -20,6 +42,7 @@ class EditProfile extends Component {
                               id="firstname" 
                               type="text"
                               placeholder={this.props.userinfo.firstname}
+                              onChange={this.handleFormChange}
                           />
                       </div>
                  </ProfileRow>
@@ -30,7 +53,18 @@ class EditProfile extends Component {
                               id="lastname" 
                               type="text"
                               placeholder={this.props.userinfo.lastname}
-      
+                              onChange={this.handleFormChange}
+                          />
+                      </div>
+                 </ProfileRow>
+                 <ProfileRow title="Email:">   
+                      <div className="form-group">
+                          <input className="form-control"  
+                              name="email" 
+                              id="email" 
+                              type="text"
+                              placeholder={this.props.userinfo.email}
+                              onChange={this.handleFormChange}
                           />
                       </div>
                  </ProfileRow>
@@ -40,15 +74,19 @@ class EditProfile extends Component {
                                   type="radio" 
                                   name="isparticipating" 
                                   value="yes"
-                                
-                                  // checked={this.props.userinfo.isparticipating}
+                                  defaultChecked={this.props.userinfo.isparticipating}
+                              onChange={this.handleFormChange}
+                                 
       
                           /> Yes <br />
                               <input 
                                   type="radio" 
                                   name="isparticipating" 
                                   value="no"
-                                  // checked={this.props.userinfo.isparticipating}
+                              onChange={this.handleFormChange}
+                                   
+
+                              defaultChecked={!this.props.userinfo.isparticipating}
       
                           /> No <br />
                       </div>
@@ -60,6 +98,9 @@ class EditProfile extends Component {
                               name="streetaddress" 
                               id="streetaddress" 
                               type="text"
+                              placeholder={this.props.userinfo.streetaddress}
+                              onChange={this.handleFormChange}
+
                           />
                       </div>
                       <div className="form-group">
@@ -68,6 +109,10 @@ class EditProfile extends Component {
                               name="state" 
                               id="state" 
                               type="text"
+                              placeholder={this.props.userinfo.state}
+
+                              onChange={this.handleFormChange}
+
                           />
                       </div>
                       <div className="form-group">
@@ -76,6 +121,10 @@ class EditProfile extends Component {
                               name="country" 
                               id="country" 
                               type="text"
+                              placeholder={this.props.userinfo.country}
+
+                              onChange={this.handleFormChange}
+
                           />
                       </div>
                       <div className="form-group">
@@ -84,16 +133,21 @@ class EditProfile extends Component {
                               name="postalcode" 
                               id="postalcode" 
                               type="text"
+                              placeholder={this.props.userinfo.postalcode}
+
+                              onChange={this.handleFormChange}
+
                           />
                       </div>
                     
-      
+                
                   </ProfileRow>
-                  <button className="btn btn-success" onClick={()=> {console.log(this.props.userinfo)}}>Submit</button>
+                  <input type="submit" className="btn btn-success" value="Submit" />
+                </form>
       
             </div>
         )
     }
 }
 
-export default EditProfile;
+export default withRouter(EditProfile);

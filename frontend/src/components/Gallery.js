@@ -6,18 +6,20 @@ import GalleryShowImages from './GalleryShowImages';
 
 
 const Gallery = props => {
-    if (typeof props.userinfo == "undefined") return (<div>Gallery!!!</div>)
+    // if (typeof props.userinfo == "undefined") return (<div>Gallery!!!</div>)
     //authenitcation component?? checks for undefined returns component
-    const message = (<p>Gallery Images</p>)
+    // const message = (<p>Gallery Images</p>)
     
     return (
         <React.Fragment>
-            <Authorized 
+            {/* <Authorized 
                 isloggedin={props.isloggedin}
                 authorized={<GalleryAddImage addimage={props.addimage} />}
                 default={message}
-            />
-         <GalleryShowImages showimages={props.showimages} getimages={props.getimages} images={props.images} /> 
+            /> */}
+            <p>Gallery Page for unsigned users</p>
+            <GalleryShowImages images={props.images} />
+         {/* <GalleryShowImages showimages={props.showimages} getimages={props.getimages} images={props.images} />  */}
           
         </React.Fragment>
     );

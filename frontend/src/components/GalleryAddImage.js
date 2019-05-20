@@ -9,10 +9,12 @@ class GalleryAddImage extends Component {
         super(props);
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            isopen: 0,
         }
         this.handleFormChange = this.handleFormChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.toggle = this.toggle.bind(this);
     }
     handleFormChange(e){  
         this.setState({
@@ -27,46 +29,63 @@ class GalleryAddImage extends Component {
             senderpostalcode: this.senderpostalcode.value,
             receiverpostalcode: this.receiverpostalcode.value
         }
-        console.log(formdata);
+        // console.log(formdata);
         // this.props.addimage(this.uploadinput.files[0]);
         this.props.addimage(formdata);
+        this.props.getimages();
         //send token
 
     }
+    toggle(e){
+        e.preventDefault();
+        this.setState({
+            isopen: !this.state.isopen
+        })
+    }
     // MUST INLUDE NAMES FOR MULTER!!!!!
     render(){
+        const form = (
+            <React.Fragment>
+                   <div className="form-group">
+                             <input className="form-control"  
+                                 ref={(ref) => { this.uploadinput = ref; }}
+                                 name="galleryImage" 
+                                 id="galleryImage" 
+                                 type="file" />
+                         </div>
+
+                         <div className="form-group">
+                             <label for="senderpostalcode">Sender Postalcode</label>
+                             <input className="form-control" 
+                                 ref={(ref) => { this.senderpostalcode = ref; }} 
+                                 name="senderpostalcode"
+                                 id="senderpostalcode"
+                                 type="text" 
+                                 placeholder="zip from user address" />
+                         </div>
+                         <div className="form-group">
+                             <label for="receiverpostalcode">Receiver Postalcode</label>
+                             <input className="form-control" 
+                                 ref={(ref) => { this.receiverpostalcode = ref; }} 
+                                 name="receiverpostalcode"
+                                 id="receiverpostalcode"
+                                 type="text" 
+                                 placeholder="zip from partner address" />
+                         </div>
+                         <Button onClick={this.handleSubmit}>Submit</Button>
+            </React.Fragment>
+        )
+        const button = (<button onClick={this.toggle}>{this.state.isopen ? "Close" : "Open"}</button>)
        return (
+          
+
             <React.Fragment>
                 <form className="text-left"  encType="multipart/form-data">
                     <Card>
                         <CardBody>
-                            <div className="form-group">
-                                <input className="form-control"  
-                                    ref={(ref) => { this.uploadinput = ref; }}
-                                    name="galleryImage" 
-                                    id="galleryImage" 
-                                    type="file" />
-                            </div>
-
-                            <div className="form-group">
-                                <label for="senderpostalcode">Sender Postalcode</label>
-                                <input className="form-control" 
-                                    ref={(ref) => { this.senderpostalcode = ref; }} 
-                                    name="senderpostalcode"
-                                    id="senderpostalcode"
-                                    type="text" 
-                                    placeholder="zip from user address" />
-                            </div>
-                            <div className="form-group">
-                                <label for="receiverpostalcode">Receiver Postalcode</label>
-                                <input className="form-control" 
-                                    ref={(ref) => { this.receiverpostalcode = ref; }} 
-                                    name="receiverpostalcode"
-                                    id="receiverpostalcode"
-                                    type="text" 
-                                    placeholder="zip from partner address" />
-                            </div>
-                            <Button onClick={this.handleSubmit}>Submit</Button>
+                            <h4>Add Pic of Postcard</h4>
+                            {button}
+                            {this.state.isopen && (form) || ""}
                         </CardBody>
                     </Card>
                 </form>
@@ -77,7 +96,7 @@ class GalleryAddImage extends Component {
     };
 }
 GalleryAddImage.propTypes = {
-
+  addimage: PropTypes.func.isRequired,
 };
 
 export default GalleryAddImage;

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Button, Form, Card, CardBody, CardTitle, CardText } from 'reactstrap';
 import Field from "./Field";
 import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom";
+
 
 
 
@@ -50,14 +52,10 @@ class Join extends Component {
             postalcode: this.state.postalcode,
             password: this.state.password,
         }
-        const values = Object.values(userinfo);
-        const keys = Object.keys(userinfo);
-        // console.log(keys);
-        for(let i = 0; i <= values.length; i++){
-            console.log(i);
-            if(typeof values[i] === "undefined") return alert(`Missing some stuff: ${keys[i]}`);
-        }
-        this.props.adduser(userinfo)
+     
+        this.props.adduser(userinfo);
+        this.props.history.push('/profile');
+
     }
     advanceForm(){
         this.setState({
@@ -187,4 +185,4 @@ class Join extends Component {
 Join.propTypes = {
     adduser: PropTypes.func.isRequired,
 };
-export default Join;
+export default withRouter(Join);

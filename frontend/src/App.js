@@ -4,11 +4,15 @@ import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom
 import './App.css';
 import SignIn from './components/SignIn';
 import Gallery from './components/Gallery';
+import GalleryShowImages from './components/GalleryShowImages';
+// import GalleryAddImage from './components/GalleryAddImage';
 import Join from './components/Join';
 import Index from './components/Index';
 import Profile from './components/Profile';
 import EditProfile from './components/EditProfile';
 import Authorized from './components/Authorized';
+import GalleryAddImage from './components/GalleryAddImage';
+import ComponentLoader from './components/ComponentLoader';
 //event -state change - rerender
 class App extends Component {
   constructor(props){
@@ -16,18 +20,21 @@ class App extends Component {
     this.state = {
       collapsed: true,
       userinfo: [],
-      authorized: 0,
-      error: 0,
-      isloggedin: 0,
-      images: []
+      authorized: false,
+      error: false,
+      isloggedin: false,
+      images: [],
+      refresh: false
     }
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.addUser = this.addUser.bind(this);
+    this.addComment = this.addComment.bind(this);
     this.signIn = this.signIn.bind(this);
     this.signOut = this.signOut.bind(this);
     this.addUser = this.addUser.bind(this);
     this.addImage = this.addImage.bind(this);
     this.getImages = this.getImages.bind(this);
+    this.editUser = this.editUser.bind(this);
   }
   toggleNavbar() {
     this.setState({
@@ -35,7 +42,6 @@ class App extends Component {
     });
   }
   addUser(userinfo){
-    console.log(userinfo)
         axios({
           method: 'post',
           url: "http://localhost:5000/AddUser",
@@ -49,14 +55,44 @@ class App extends Component {
           }
         })
         .then(res => {
-          //
+          // console.log(res.data.userinfo)
           this.setState({
-            authorized: 1,
-            isloggedin: 1,
+            authorized: true,
+            isloggedin: true,
             userinfo: res.data
           })
         })
         .catch(error => console.log(error));
+  }
+  editUser(userinfo){
+    // console.log("data:", userinfo)
+    // console.log("token state: ", this.state.userinfo.token);
+
+
+    axios({
+      method: 'put',
+      url: "http://localhost:5000/EditUser",
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        // 'Content-Type': 'application/json',
+        'x-access-token': this.state.userinfo.token
+      },
+      //get from form
+      data: {
+        userinfo
+      }
+    })
+    .then(res => {
+      //
+      // console.log("EDIT RES DATA", res);
+      this.setState({
+        // authorized: 1,
+        // isloggedin: 1,
+        userinfo: res.data
+      })
+    })
+    .catch(error => console.log(error));
+
   }
   getImages(){
     axios({
@@ -69,7 +105,7 @@ class App extends Component {
     })
     .then(res => {
       //
-     console.log(res.data);
+    //  console.log(res.data);
      this.setState({
        images: res.data
      })
@@ -77,8 +113,36 @@ class App extends Component {
     .catch(error => console.log(error));
 
   }
+  addComment(data){
+    // console.log("APP comment: ", data)
+    axios({
+      method: 'post',
+      url: "http://localhost:5000/AddComment",
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        // 'Content-Type': `multipart/form-data; boundary=---XXX`,
+        'x-access-token': this.state.userinfo.token
+      },
+      //get from form
+      data
+      
+    })
+    .then(res => {
+      // console.log(res.data.images)
+      this.setState({
+        authorized: true,
+        isloggedin: true,
+        images: res.data.images,
+        //send back new images data
+
+        // userinfo: res.data
+      })
+    })
+    .catch(error => console.log(error));
+
+  }
   addImage(formdata){
-    // console.log(imageinfo, " ", this.state.userinfo.token);
+    // console.log(formdata, " ", this.state.userinfo.token);
     //  console.log("IMAGE INFO APP: ", formdata);
      
       // data.append('filename', this.fileName.value);
@@ -100,10 +164,11 @@ class App extends Component {
         
       })
       .then(res => {
-        console.log(res)
+        // console.log(res)
         this.setState({
-          // authorized: 1,
-          // isloggedin: 1,
+          authorized: true,
+          isloggedin: true,
+          // images: 
           // userinfo: res.data
         })
       })
@@ -111,8 +176,8 @@ class App extends Component {
   }
   signOut(){
     this.setState({
-      authorized: 0,
-      isloggedin: 0,
+      authorized: false,
+      isloggedin: false,
       userinfo: []
     })
   }
@@ -134,101 +199,107 @@ class App extends Component {
     })
     .then(res => {
       //check auth
+      // console.log("RES: ", res.data);
       if (res.data.message == "Success"){
         this.setState({
-          authorized: 1,
-          isloggedin: 1,
+          authorized: true,
+          isloggedin: true,
           userinfo: res.data,
           error: 0
         });
       } 
-      // else{
-        
-      // }
-      // console.log(this.state.error)
     })
     .catch(error => {
       // console.log("asfdasdf ",error," asdfasddf");
       this.setState({
         error: 1,
-        authorized: 0,
-        isloggedin: 0,
+        authorized: false,
+        isloggedin: false,
         userinfo: []
       });
     });
   }
   componentDidMount(){
+    // console.log("mounted!!!")
     this.getImages();
   }
   
   render() {
+    const authorized = (
+      <React.Fragment>
+          <Link to='/profile'>Profile</Link> |  
+          <Link to='/gallery'>Gallery</Link> 
+          <Route path="/signin" component={() => (<Redirect to='/profile' />)} />
+          <Route path="/profile" component={() => (
+            <ComponentLoader>
+              <Profile 
+                editlink={(<Link to="/edit">Edit</Link>)} 
+                signout={this.signOut} 
+                userinfo={this.state.userinfo.userinfo} 
+                isloggedin={this.state.isloggedin} 
+              />
+            </ComponentLoader>)
+          } />
+          <Route path="/edit" component={() => (<EditProfile
+            userinfo={this.state.userinfo.userinfo}
+            edituser={this.editUser} />)} 
+          />
+         <Route path="/gallery" component={() => (
+            <React.Fragment>
+              <ComponentLoader>
+                  <GalleryAddImage addimage={this.addImage} getimages={this.getImages} />
+                  <GalleryShowImages
+                      showcommentform={true} 
+                      images={this.state.images}
+                      addcomment={this.addComment}
+                      author={this.state.userinfo.userinfo.firstname}
+                    />
+                </ComponentLoader>
+              </React.Fragment>)
+            }/>
+           
+        </React.Fragment>
+    );
+    const notauthorized = (
+        <React.Fragment>
+          <Link to='/signin'>Sign In</Link> |  
+          <Link to='/join'>Join</Link> | 
+          <Link to='/gallery'>Gallery</Link> 
+
+          <Route path="/signin" component={()=>{
+              return (<SignIn 
+                          signIn={this.signIn} 
+                          error={this.state.error} 
+                      />) 
+            }
+          } />
+          <Route path="/profile" component={() => (<Redirect to='/signin' />)} />
+          <Route path="/gallery" component={() => (
+            <GalleryShowImages 
+                showcommentform={false} 
+                images={this.state.images}
+                addcomment={this.addComment}
+              />)
+          } />
+        
+          <Route path="/join" component={() => {
+              return (<Join adduser={this.addUser} />)
+            }} 
+          />  
+        </React.Fragment>
+    );
     return (
       <Router>
         <div className="App container">
           <h1>Postcard Exchange</h1>
-          <Link to='/'>Home</Link> 
-           | 
-           
+          <Link to='/'>Home</Link> | 
           <Authorized
             isloggedin={this.state.isloggedin}
-            authorized={<Link to='/profile'>Profile</Link>} 
-            default={<Link to='/signin'>Sign In</Link>} 
-          /> 
-           | 
-          
-          <Authorized
-            isloggedin={this.state.isloggedin}
-            authorized={" "} 
-            default={<Link to='/join'>Join</Link>} 
-          /> 
-           | 
-          
-          
-          <Link to='/gallery'>Gallery</Link>  
-          
-          <Authorized 
-            isloggedin={this.state.isloggedin} 
-            authorized={<p>Authorized component goes here</p>}
-            default={<p>default component goes here</p>}
+            authorized={ authorized }
+            default={ notauthorized }
           />
-          
           <Route path="/" exact component={Index} />
-          <Route path="/signin" component={() => {
-            return (<Authorized 
-                isloggedin={this.state.isloggedin}
-                authorized={<Redirect to='/profile' />}
-                default={<SignIn signIn={this.signIn} error={this.state.error} />}
-                />)
-              }
-            } />
-          <Route path="/gallery" component={() => (
-            <Gallery 
-              isloggedin={this.state.isloggedin} 
-              userinfo={this.state.userinfo}
-              getimages={this.getImages}
-              images={this.state.images}
-              addimage={this.addImage} 
-            />)
-          } />
-          <Route path="/profile" component={() => (<Profile 
-            editlink={(<Link to="/edit">Edit</Link>)} 
-            signout={this.signOut} 
-            userinfo={this.state.userinfo.userinfo} 
-            isloggedin={this.state.isloggedin} />)
-          } />
-          <Route path="/edit" component={() => (<EditProfile 
-            userinfo={this.state.userinfo} />)} />
-          <Route path="/join" component={ 
-            () =>
-            {
-              return <Authorized 
-                isloggedin={this.state.isloggedin}
-                authorized={<Redirect to='/profile' />}
-                default={<Join adduser={this.addUser} />}
-              />
-            }
-          } />
-         
+
         </div>
        
       </Router>

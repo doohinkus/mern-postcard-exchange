@@ -5,8 +5,10 @@
   "dependencies": {
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
+    "google-map-react": "^1.1.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-geocode": "^0.1.2",
     "react-lazyload": "^2.5.0",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",

@@ -5,11 +5,11 @@ import ProfileRow from "./ProfileRow";
 import PropTypes from "prop-types";
 
 const Profile = (props) => {
-    const message = (<p>Logged out</p>);
-    if (!props.userinfo) return message;
+//     const message = (<p>Logged out</p>);
+//     if (!props.userinfo) return message;
     const userinfo = (
            <React.Fragment>
-               {props.editlink}
+               <p>{props.editlink}</p>
                <ProfileRow
                     title="Avatar"
                >
@@ -37,18 +37,19 @@ const Profile = (props) => {
                <ProfileRow
                     title="Am I paired up this month?"
                >
-                    <strong>{props.userinfo.isparticipating ? "Yes" : "No"}</strong>
+                    <strong>{props.userinfo.ispaired ? "Yes" : "No"}</strong>
 
                </ProfileRow>
                <ProfileRow
                     title="Address:"
                >
                     <p className='bg-light p-3 rounded mt-2'>
-                        {props.userinfo.contact.address.streetaddress} <br />
-                        {props.userinfo.contact.address.city} <br />
-                        {props.userinfo.contact.address.state} <br />
-                        {props.userinfo.contact.address.country} <br />
-                        {props.userinfo.contact.address.zip} <br />
+                        {props.userinfo.streetname} <br />
+                        {props.userinfo.streetaddress} <br />
+                        {props.userinfo.city} <br />
+                        {props.userinfo.state} <br />
+                        {props.userinfo.country} <br />
+                        {props.userinfo.postalcode} <br />
                     </p>
 
                </ProfileRow>
@@ -62,7 +63,7 @@ const Profile = (props) => {
         <Authorized 
             isloggedin={props.isloggedin}
             authorized={userinfo}
-            default={message}
+            default={(<p>Logged out</p>)}
         />
     )
             
