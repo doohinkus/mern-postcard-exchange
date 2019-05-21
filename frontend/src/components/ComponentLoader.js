@@ -3,8 +3,8 @@ import { CSSTransition } from 'react-transition-group';
 
 
 class ComponentLoader extends Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
             loading: true,
         }
@@ -17,16 +17,9 @@ class ComponentLoader extends Component {
     }
     render(){
         return (
-            <CSSTransition
-                in={true}
-                timeout={300}
-                classNames="my-node"
-                // unmountOnExit
-                // onEnter={() => setShowButton(false)}
-                // onExited={() => setShowButton(true)}
-          >
-                {this.state.loading ? (<p>Loading....</p>) : (<div className="fade-in visible">{this.props.children}</div>)}     
-           </CSSTransition>
+            {this.state.loading ? (<p>Loading...</p>) : ({this.props.children})}
+       
+           
         );
     }
 };

@@ -12,7 +12,9 @@ import Profile from './components/Profile';
 import EditProfile from './components/EditProfile';
 import Authorized from './components/Authorized';
 import GalleryAddImage from './components/GalleryAddImage';
-import ComponentLoader from './components/ComponentLoader';
+// import ComponentLoader from './components/ComponentLoader';
+import LazyLoad from 'react-lazyload';
+
 //event -state change - rerender
 class App extends Component {
   constructor(props){
@@ -231,14 +233,14 @@ class App extends Component {
           <Link to='/gallery'>Gallery</Link> 
           <Route path="/signin" component={() => (<Redirect to='/profile' />)} />
           <Route path="/profile" component={() => (
-            <ComponentLoader>
+            <LazyLoad placeholder={<p>Loading...</p>} height={100}>
               <Profile 
                 editlink={(<Link to="/edit">Edit</Link>)} 
                 signout={this.signOut} 
                 userinfo={this.state.userinfo.userinfo} 
                 isloggedin={this.state.isloggedin} 
               />
-            </ComponentLoader>)
+            </LazyLoad>)
           } />
           <Route path="/edit" component={() => (<EditProfile
             userinfo={this.state.userinfo.userinfo}
@@ -246,15 +248,15 @@ class App extends Component {
           />
          <Route path="/gallery" component={() => (
             <React.Fragment>
-              <ComponentLoader>
-                  <GalleryAddImage addimage={this.addImage} getimages={this.getImages} />
-                  <GalleryShowImages
-                      showcommentform={true} 
-                      images={this.state.images}
-                      addcomment={this.addComment}
-                      author={this.state.userinfo.userinfo.firstname}
-                    />
-                </ComponentLoader>
+                
+                    <GalleryAddImage addimage={this.addImage} getimages={this.getImages} />
+                    <GalleryShowImages
+                        showcommentform={true} 
+                        images={this.state.images}
+                        addcomment={this.addComment}
+                        author={this.state.userinfo.userinfo.firstname}
+                      />
+                
               </React.Fragment>)
             }/>
            
@@ -275,11 +277,16 @@ class App extends Component {
           } />
           <Route path="/profile" component={() => (<Redirect to='/signin' />)} />
           <Route path="/gallery" component={() => (
-            <GalleryShowImages 
-                showcommentform={false} 
-                images={this.state.images}
-                addcomment={this.addComment}
-              />)
+            // <LazyLoad placeholder={<p>Loading...</p>} height={100}>
+              //  <Fade bottom cascade>
+                  <GalleryShowImages 
+                      showcommentform={false} 
+                      images={this.state.images}
+                      addcomment={this.addComment}
+                    />
+                // </Fade>
+            // </LazyLoad>
+              )
           } />
         
           <Route path="/join" component={() => {

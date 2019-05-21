@@ -1,26 +1,22 @@
 .App {
   text-align: center;
 }
-.my-node-enter {
-  opacity: 0;
+.fade-enter {
+  opacity: 0.01;
 }
-.my-node-enter-active {
+
+.fade-enter.fade-enter-active {
   opacity: 1;
-  transition: opacity 200ms;
+  transition: opacity 500ms ease-in;
 }
-.my-node-exit {
+
+.fade-leave {
   opacity: 1;
 }
-.my-node-exit-active {
-  opacity: 0;
-  transition: opacity 200ms;
-}
-.fade-in {
-  opacity: 0;
-}
-.fade-in.visible {
-  transition: opacity 1s ease-in;
-  opacity: 1;
+
+.fade-leave.fade-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
 }
 .App-logo {
   animation: App-logo-spin infinite 20s linear;

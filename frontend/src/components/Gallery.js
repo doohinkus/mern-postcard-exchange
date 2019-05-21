@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import GalleryAddImage from './GalleryAddImage';
 import Authorized from './Authorized';
 import GalleryShowImages from './GalleryShowImages';
+import LazyLoad from 'react-lazyload';
 
 
 const Gallery = props => {
@@ -18,7 +19,11 @@ const Gallery = props => {
                 default={message}
             /> */}
             <p>Gallery Page for unsigned users</p>
-            <GalleryShowImages images={props.images} />
+            <LazyLoad height={100}        
+                placeholder={(<p>Loading...</p>)}
+            >
+                <GalleryShowImages images={props.images} />
+            </LazyLoad>
          {/* <GalleryShowImages showimages={props.showimages} getimages={props.getimages} images={props.images} />  */}
           
         </React.Fragment>

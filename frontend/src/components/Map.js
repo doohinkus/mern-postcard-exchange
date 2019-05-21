@@ -1,5 +1,7 @@
 import React, {Component} from "react";
 import GoogleMapReact from "google-map-react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 
 
 const Marker = ({ text }) => <div style={{fontSize:'1.5rem', width:"100%"}}>📬</div>;
@@ -20,7 +22,7 @@ class Map extends Component {
     render(){
         return (
             <React.Fragment>
-                <p onClick={this.toggleMap} style={{cursor: 'pointer'}}>{this.state.showmap ? "Hide" : (<span class='glyphicon glyphicon-plus'></span>)} Map</p>
+                <p onClick={this.toggleMap} style={{cursor: 'pointer'}}>{this.state.showmap ? (<FontAwesomeIcon icon={faEyeSlash} />) : (<FontAwesomeIcon icon={faEye} />)} Map</p>
                 {this.state.showmap && (
                     <div style={{ height: '40vh', width: '80%', margin: 'auto' }}>
                     <GoogleMapReact
