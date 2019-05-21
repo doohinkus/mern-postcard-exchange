@@ -6,7 +6,19 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
+const NodeGeocoder = require('node-geocoder');
 // const cors = require('cors');
+
+const options = {
+    provider: 'google',
+   
+    // Optional depending on the providers
+    httpAdapter: 'https', // Default
+    apiKey: 'AIzaSyA6ljV2DbcA5PNva5Hu7PbmPBlQ2pKW4D0', // for Mapquest, OpenCage, Google Premier
+    formatter: null         // 'gpx', 'string', ...
+  };
+
+const geocoder = NodeGeocoder(options);
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb){
@@ -122,25 +134,71 @@ exports.AddImage = (req, res, next) =>{
     if(!req.file || !req.body.senderpostalcode || !req.body.receiverpostalcode){
         return res.json({message: "Error with form data.", token: res.verifiedToken})
     }  
+    //get lat and lng set in res if they are legit.
+    // sender: {
+    //     lon:
+    //     lat:
+    // }
+    // receiver: {
+    //     lon:
+    //     lat:
+    // }
+    let receiver;
+    let sender;
+  
+   
 
     const image = new Gallery({
         _id: mongoose.Types.ObjectId(),
         url: req.file.filename,
         owner: res.verifiedToken.userid,
         senderpostalcode: req.body.senderpostalcode,
-        receiverpostalcode: req.body.receiverpostalcode
-    })
+        receiverpostalcode: req.body.receiverpostalcode,
+        receiver
+    });
+
     image.save()
         .then(result => {
-            return res.json({
-                success: `Gallery Photo  ${req.file.filename} added`,
-                message: "Success",
-                senderpostalcode: req.body.senderpostalcode,
-                receiverpostalcode: req.body.receiverpostalcode,
-                owner: res.verifiedToken.userid,
-                // token: res.verifiedToken,
-                image
-            });
+            //return a new list of images!!!! to refresh gallery
+            // console.log("receiver: ", res.receiver);
+            geocoder.geocode(req.body.receiverpostalcode)
+            .then(receiverzip => {
+                const receiver = {
+                    lng: receiverzip[0].longitude,
+                    lat: receiverzip[0].latitude,
+                }
+                geocoder.geocode(req.body.receiverpostalcode)
+                .then(senderzip => {
+                    const sender = {
+                        lng: senderzip[0].longitude,
+                        lat: senderzip[0].latitude,
+                    }
+                    console.log("motherload : ", {
+                        success: `Gallery Photo  ${req.file.filename} added`,
+                        message: "Show",
+                        senderpostalcode: req.body.senderpostalcode,
+                        receiverpostalcode: req.body.receiverpostalcode,
+                        owner: res.verifiedToken.userid,
+                        receiver,
+                        sender,
+                        // token: res.verifiedToken,
+                        image
+                    })
+                    return res.json({
+                        success: `Gallery Photo  ${req.file.filename} added`,
+                        message: "Success",
+                        senderpostalcode: req.body.senderpostalcode,
+                        receiverpostalcode: req.body.receiverpostalcode,
+                        owner: res.verifiedToken.userid,
+                        receiver,
+                        sender,
+                        // token: res.verifiedToken,
+                        image
+                    });
+                })
+                
+                
+            })
         })
         .catch(err => {
             console.error(err);

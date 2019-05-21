@@ -14,6 +14,14 @@ const gallerySchema = mongoose.Schema({
     owner: String,
     senderpostalcode: String,
     receiverpostalcode: String,
+    sender: {
+        lat: String,
+        lng: String
+    },
+    receiver: {
+        lat: String,
+        lng: String
+    },
     url: String,
     comments: [commentSchema]
 });
