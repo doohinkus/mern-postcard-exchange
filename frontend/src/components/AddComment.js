@@ -26,7 +26,7 @@ class AddComment extends Component {
         //send data to app
         // console.log(data);
         this.props.addcomment(data);
-        this.props.history.push('/gallery');
+        // this.props.history.push('/gallery');
     }
     handleFormChange(e){
         //make state mirror data

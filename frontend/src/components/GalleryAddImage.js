@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Button, Card, CardTitle, CardBody } from 'reactstrap';
 import Field from "./Field";
 import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom";
+
 
 
 class GalleryAddImage extends Component {
@@ -32,7 +34,9 @@ class GalleryAddImage extends Component {
         // console.log(formdata);
         // this.props.addimage(this.uploadinput.files[0]);
         this.props.addimage(formdata);
-        this.props.getimages();
+        // this.props.getimages();
+        this.props.history.push('/gallery');
+        
         //send token
 
     }
@@ -99,4 +103,4 @@ GalleryAddImage.propTypes = {
   addimage: PropTypes.func.isRequired,
 };
 
-export default GalleryAddImage;
+export default withRouter(GalleryAddImage);

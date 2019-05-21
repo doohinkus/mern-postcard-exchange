@@ -17,7 +17,7 @@ class ShowComments extends Component {
         })
     }
     render(){
-        const comments = this.props.comments.map(comment => {
+        const comments = this.props.comments.reverse().map(comment => {
             return (
                 <React.Fragment key={comment._id}>
                     <Fade left>

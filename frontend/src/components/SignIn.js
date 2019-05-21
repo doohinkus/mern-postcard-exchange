@@ -27,7 +27,7 @@ class SignIn extends Component {
     render(){
         return (
             <React.Fragment>
-                <Form onSubmit={this.handleSubmit} className="text-left">
+                <Form onSubmit={this.handleSubmit} className="text-left mt-2">
                     <Card>
                         <CardBody>
                             <CardTitle>Sign In</CardTitle>

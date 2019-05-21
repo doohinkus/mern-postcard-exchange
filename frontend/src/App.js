@@ -14,6 +14,7 @@ import Authorized from './components/Authorized';
 import GalleryAddImage from './components/GalleryAddImage';
 // import ComponentLoader from './components/ComponentLoader';
 import LazyLoad from 'react-lazyload';
+import { Nav, NavItem, Dropdown, DropdownItem, DropdownToggle, DropdownMenu, NavLink } from 'reactstrap';
 
 //event -state change - rerender
 class App extends Component {
@@ -108,6 +109,7 @@ class App extends Component {
     .then(res => {
       //
     //  console.log(res.data);
+    
      this.setState({
        images: res.data
      })
@@ -134,6 +136,7 @@ class App extends Component {
       this.setState({
         authorized: true,
         isloggedin: true,
+
         images: res.data.images,
         //send back new images data
 
@@ -170,13 +173,12 @@ class App extends Component {
         this.setState({
           authorized: true,
           isloggedin: true,
-          // images: 
-          // userinfo: res.data
-        })
+        }, () => this.getImages())
       })
       .catch(error => console.log(error));
   }
-  signOut(){
+  signOut(e){
+    e.preventDefault();
     this.setState({
       authorized: false,
       isloggedin: false,
@@ -229,18 +231,34 @@ class App extends Component {
   render() {
     const authorized = (
       <React.Fragment>
-          <Link to='/profile'>Profile</Link> |  
-          <Link to='/gallery'>Gallery</Link> 
+          <Nav tabs>
+          <NavItem>
+              <Link to='/' className="nav-link">Home</Link>
+          </NavItem>
+          <NavItem>
+              <Link to='/profile' className="nav-link">Profile</Link>
+          </NavItem>
+          <NavItem>
+              <Link to="/edit" className="nav-link">Edit</Link>
+          </NavItem>
+          <NavItem>
+              <a href="#" className="nav-link" onClick={this.signOut}>Sign Out</a>
+          </NavItem>
+          <NavItem>
+              <Link to='/gallery' className="nav-link">Gallery</Link>
+          </NavItem>
+        </Nav>
           <Route path="/signin" component={() => (<Redirect to='/profile' />)} />
           <Route path="/profile" component={() => (
-            <LazyLoad placeholder={<p>Loading...</p>} height={100}>
+        
               <Profile 
-                editlink={(<Link to="/edit">Edit</Link>)} 
-                signout={this.signOut} 
+                // editlink={(<Link to="/edit">Edit</Link>)} 
+                signout={this.signOut}
+                partnerinfo={this.state.userinfo} 
                 userinfo={this.state.userinfo.userinfo} 
                 isloggedin={this.state.isloggedin} 
               />
-            </LazyLoad>)
+            )
           } />
           <Route path="/edit" component={() => (<EditProfile
             userinfo={this.state.userinfo.userinfo}
@@ -262,44 +280,54 @@ class App extends Component {
            
         </React.Fragment>
     );
+// if you want to separate, you must drop Link as a component
     const notauthorized = (
-        <React.Fragment>
-          <Link to='/signin'>Sign In</Link> |  
-          <Link to='/join'>Join</Link> | 
-          <Link to='/gallery'>Gallery</Link> 
-
-          <Route path="/signin" component={()=>{
-              return (<SignIn 
-                          signIn={this.signIn} 
-                          error={this.state.error} 
-                      />) 
-            }
-          } />
-          <Route path="/profile" component={() => (<Redirect to='/signin' />)} />
-          <Route path="/gallery" component={() => (
-            // <LazyLoad placeholder={<p>Loading...</p>} height={100}>
-              //  <Fade bottom cascade>
-                  <GalleryShowImages 
-                      showcommentform={false} 
-                      images={this.state.images}
-                      addcomment={this.addComment}
-                    />
-                // </Fade>
-            // </LazyLoad>
-              )
-          } />
+      <React.Fragment>
+        <Nav tabs>
+          <NavItem>
+              <Link to='/' className="nav-link">Home</Link>
+          </NavItem>
+          <NavItem>
+              <Link to='/signin' className="nav-link">Sign In</Link>
+          </NavItem>
+          <NavItem>
+              <Link to='/join' className="nav-link">Join</Link>
+          </NavItem>
+          <NavItem>
+              <Link to='/gallery' className="nav-link">Gallery</Link>
+          </NavItem>
+        </Nav>
         
-          <Route path="/join" component={() => {
-              return (<Join adduser={this.addUser} />)
-            }} 
-          />  
-        </React.Fragment>
-    );
+  
+        <Route path="/signin" component={()=>{
+            return (<SignIn 
+                        signIn={this.signIn} 
+                        error={this.state.error} 
+                    />) 
+          }
+        } />
+        <Route path="/profile" component={() => (<Redirect to='/signin' />)} />
+        <Route path="/gallery" component={() => (
+              <GalleryShowImages 
+                  showcommentform={false} 
+                  images={this.state.images}
+                  addcomment={this.addComment}
+                />
+            )
+        } />
+      
+        <Route path="/join" component={() => {
+            return (<Join adduser={this.addUser} />)
+          }} 
+        />  
+      </React.Fragment>
+  );
+    
     return (
       <Router>
         <div className="App container">
           <h1>Postcard Exchange</h1>
-          <Link to='/'>Home</Link> | 
+         
           <Authorized
             isloggedin={this.state.isloggedin}
             authorized={ authorized }
