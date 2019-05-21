@@ -34,4 +34,7 @@ module.exports = (app) =>{
 
    app.route('/AddImage')
       .post(controllers.CheckAuth, controllers.UploadImage, controllers.AddImage);
+
+   app.route('/PairUsers')
+      .get(controllers.PairUsers);
 }
