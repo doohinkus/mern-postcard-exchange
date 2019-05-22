@@ -173,7 +173,8 @@ exports.Login = (req, res, next) => {
                     (err, token) => {
                         if (err) return res.json({message: "error with token"});
                         //if participating and paired up, send partner info
-                        if(user.isparticipating && user.ispaired){
+                        console.log("USER:::> ", user)
+                        if(user.ispaired){
                             //find user.partner.partner_id
                             User.findOne({_id: user.partner}, (err, partner) =>{
                                 if (err)  return res.json({message: "Error fining partner"});
@@ -204,16 +205,27 @@ exports.Login = (req, res, next) => {
 
                             })
                            
+                        }else{
+                            return res
+                            .json({
+                                //set token for app
+                                token, 
+                                message: "Success", 
+                                // email: user.contact.email, 
+                                // userid: user._id,
+                                userinfo: user});
                         }
+
                      
                     });
             } else{
-                return res.status(404).json({error: `Error occured`, message: 'Error loggin in'})
+                console.log("ESLE::::> ", user)
+               return res.json({message: "Error loggin in"})
             }
           
         });
+        //   return res.json({message: "Something got fucked up"})
     });
-
    
         
 }
@@ -288,33 +300,64 @@ exports.EditUser = (req, res, next) =>{
         // console.log(result);
         // return updated record
         User.findOne(query, (err, user) => {
-            // console.log("second query, ", user);
-            if (user){
+            if(user.ispaired){
+                //find user.partner.partner_id
                 jwt.sign(
                     {email: user.email, userid: user._id}, 
                     key,
                     {expiresIn: '1h'}, 
                     (err, token) => {
-                        if (err) console.log(err);
-                        return res
-                        //set token in header
-                        //client needs to grab this info
-                        // .set('Authorization', `Bearer ${token}`)
-                        .json({
-                            //sends token to app
-                            token, 
-                            message: "Success", 
-                            // email: user.contact.email, 
-                            // userid: user._id,
-                            userinfo: user
+                        if (err) return res.json({message: "error with token"});
+                        //if participating and paired up, send partner info
+                        if(token){
+                            //find user.partner.partner_id
+                            User.findOne({_id: user.partner}, (err, partner) =>{
+                                if (err)  return res.json({message: "Error fining partner"});
+                                //partner firstname
+                                //partner address
+                                console.log("PARTNER::::> ", partner)
+                                return res
+                                .json({
+                                    //set token for app
+                                    token, 
+                                    message: "Success", 
+                                    // email: user.contact.email, 
+                                    // userid: user._id,
+                                    userinfo: user,
+                                    partner: {
+                                        partnername: partner.firstname,
+                                        parnteremail: partner.email,
+                                        partneraddress:{
+                                            streetaddress: partner.streetaddress,
+                                            city: partner.city,
+                                            state: partner.state,
+                                            country: partner.country,
+                                            postalcode: partner.postalcode
+                                        }
+                                    }
+        
+                                });
 
-                        });
+                            })
+                           
+                        }
+                     
                     });
-            } else{
-                return res.status(404).json({error: `Error occured`, message: 'User not found'})
+               
+            }
+            else{
+                return  res
+                            .json({
+                                //set token for app
+                                token, 
+                                message: "Success", 
+                                // email: user.contact.email, 
+                                // userid: user._id,
+                                userinfo: user})
             }
             // return res.json({message: "Success", userinfo: result});
         });
+        // return res.status(404).json({error: `Error occured`, message: 'User not found'})
     
         // return res.json({message: `user: ${req.body.firstname} successfully updated`, userinfo: result});
     });
