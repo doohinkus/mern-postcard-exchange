@@ -70,8 +70,6 @@ class App extends Component {
   editUser(userinfo){
     // console.log("data:", userinfo)
     // console.log("token state: ", this.state.userinfo.token);
-
-
     axios({
       method: 'put',
       url: "http://localhost:5000/EditUser",
@@ -87,7 +85,7 @@ class App extends Component {
     })
     .then(res => {
       //
-      // console.log("EDIT RES DATA", res);
+      console.log("EDIT RES DATA", res);
       this.setState({
         // authorized: 1,
         // isloggedin: 1,
@@ -187,7 +185,7 @@ class App extends Component {
   }
   
   signIn(userinfo){
-    // console.log(userinfo);
+    console.log(userinfo);
     axios({
       method: 'post',
       url: "http://localhost:5000/Login",
@@ -203,7 +201,7 @@ class App extends Component {
     })
     .then(res => {
       //check auth
-      // console.log("RES: ", res.data);
+      console.log("RES: ", res.data);
       if (res.data.message == "Success"){
         this.setState({
           authorized: true,

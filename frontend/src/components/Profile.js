@@ -6,8 +6,12 @@ import PropTypes from "prop-types";
 import Fade from 'react-reveal/Fade';
 import LazyLoad from 'react-lazyload';
 
-
-
+const months = ['January', 'Febuary', 'March', 'April',
+'May', 'June', 'July', 'August',
+'September', 'October', 'November', 'December'];
+const date = new Date();
+const month = months[date.getMonth()];
+const year = date.getFullYear();
 const Profile = (props) => {
 //     const message = (<p>Logged out</p>);
 //     if (!props.userinfo) return message;
@@ -34,45 +38,54 @@ const Profile = (props) => {
 
                          </ProfileRow>
                          <ProfileRow
-                              title="Participating this month:"
+                              title={`Participating this month (${month}, ${year})`}
                          >
                               <strong>{props.userinfo.isparticipating ? "Yes" : "No"}</strong>
 
                          </ProfileRow>
                          <ProfileRow
-                              title="Am I paired up this month?"
+                              title={`Am I paired up this month (${month}, ${year})?`}
                          >
                               <strong>{props.userinfo.ispaired ? "Yes" : "No"}</strong>
+                         </ProfileRow>
+                         <ProfileRow
+                              title="Your partner's information:"
+                         >
                               {props.userinfo.ispaired && (
                                     <Card>
                                          <CardBody>
 
                                              <h3>{props.partnerinfo.partner.partnername}</h3>
                                              <p>{props.partnerinfo.partner.parnteremail}</p>
-                                             <div className="pl-2">
-                                             {props.partnerinfo.partner.partneraddress.streetaddress} <br />
-                                             {props.partnerinfo.partner.partneraddress.city}<br />
-                                             {props.partnerinfo.partner.partneraddress.state} <br />
-                                             {props.partnerinfo.partner.partneraddress.country} <br />
-                                             {props.partnerinfo.partner.partneraddress.postlcode}
+                                             <div className="pl-3">
+                                                  {props.partnerinfo.partner.partneraddress.streetaddress} <br />
+                                                  {props.partnerinfo.partner.partneraddress.city}<br />
+                                                  {props.partnerinfo.partner.partneraddress.state} <br />
+                                                  {props.partnerinfo.partner.partneraddress.country} <br />
+                                                  {props.partnerinfo.partner.partneraddress.postlcode}
                                              </div>
                                          </CardBody>
                                     </Card>
                               )}
-                            
-
                          </ProfileRow>
                          <ProfileRow
-                              title="Address:"
+                              title="Your Information:"
                          >
-                              <p className='bg-light p-3 rounded mt-2'>
-                              {props.userinfo.streetname} <br />
-                              {props.userinfo.streetaddress} <br />
-                              {props.userinfo.city} <br />
-                              {props.userinfo.state} <br />
-                              {props.userinfo.country} <br />
-                              {props.userinfo.postalcode} <br />
-                              </p>
+                              <Card>
+                                         <CardBody>
+                                             <h3>{props.userinfo.firstname}</h3>
+                                             <p>{props.userinfo.email}</p>
+                                             <div className="pl-3">
+                                                  {props.userinfo.streetname} <br />
+                                                  {props.userinfo.streetaddress} <br />
+                                                  {props.userinfo.city} <br />
+                                                  {props.userinfo.state} <br />
+                                                  {props.userinfo.country} <br />
+                                                  {props.userinfo.postalcode} <br />
+                                             </div>
+                                         </CardBody>
+                              </Card>
+                           
 
                          </ProfileRow>
                     </Fade>
