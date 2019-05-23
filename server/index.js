@@ -16,7 +16,8 @@ const PORT = 5000;
 const app = express();
 app.use('/static', express.static(path.join(__dirname, '/uploads')));
 
-mongoose.connect('mongodb://127.0.0.1:27017/postcards', {useNewUrlParser: true})
+// mongoose.connect('mongodb://127.0.0.1:27017/postcards', {useNewUrlParser: true})
+mongoose.connect('mongodb://mongo:27017/postcards', {useNewUrlParser: true})
 .then(()=>{
     console.log('Connected to MongoDB')
 })
