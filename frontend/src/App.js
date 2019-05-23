@@ -11,6 +11,7 @@ import EditProfile from './components/EditProfile';
 import Authorized from './components/Authorized';
 import GalleryAddImage from './components/GalleryAddImage';
 import { Nav, NavItem} from 'reactstrap';
+import header from './images/header.png';
 
 //event -state change - rerender
 class App extends Component {
@@ -57,7 +58,6 @@ class App extends Component {
           if(res.data.error){
             this.setState({
               isloggedin: false,
-              // iserror: true
             })
           }else{
             this.setState({
@@ -294,7 +294,9 @@ class App extends Component {
     return (
       <Router>
         <div className="App container">
-          <h1>Postcard Exchange</h1>
+           <div>
+            <img src={header} className='img-thumbnail border-0' />
+           </div>
          
           <Authorized
             isloggedin={this.state.isloggedin}

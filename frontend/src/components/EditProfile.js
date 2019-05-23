@@ -3,13 +3,10 @@ import { withRouter } from "react-router-dom";
 import ProfileRow from "./ProfileRow";
 import Fade from 'react-reveal/Fade';
 
-
 class EditProfile extends Component {
     constructor(props){
-        //only takes userdata object
         super(props);
         this.state = {
-        //   isediting: true,
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleFormChange = this.handleFormChange.bind(this);
@@ -17,21 +14,16 @@ class EditProfile extends Component {
    
     handleSubmit(e){
         e.preventDefault();
-    
-//send data to app
-        console.log(this.state);
         this.props.edituser(this.state);
         this.props.history.push('/profile');
     }
     handleFormChange(e){
-        //make state mirror data
  
         this.setState({
            [e.target.name] : e.target.value 
         });
     }
     render(){
-        // if(!this.state.isediting) return (this.props.redirect)
         return(
             <Fade>
 
