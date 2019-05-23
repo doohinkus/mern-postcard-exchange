@@ -139,7 +139,7 @@ exports.Get = (req, res, next) =>{
 exports.Login = (req, res, next) => {
     User.findOne({email: req.body.email}, (err, user) => {
         if(err) return res.json({error: err});
-        if (!user) return res.status(404).json({error: `User not found`});
+        if (!user) return res.json({message: "User not found", error: `User not found`});
         bcrypt.compare(req.body.password, user.password, (err, result) =>{
             if(err) console.log(err);
             if (result){
@@ -287,11 +287,18 @@ exports.EditUser = (req, res, next) =>{
                
             }
             else{
-                return  res
-                            .json({
-                                token, 
-                                message: "Success", 
-                                userinfo: user})
+                jwt.sign(
+                    {email: user.email, userid: user._id}, 
+                    key,
+                    {expiresIn: '1h'}, 
+                    (err, token) => {
+                        if (err) return res.json({message: "Error with toke", error:"Error wiht token"})
+                        return  res
+                                    .json({
+                                        token, 
+                                        message: "Success", 
+                                        userinfo: user})
+                    });
             }
         });
     });

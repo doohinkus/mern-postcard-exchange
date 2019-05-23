@@ -6,6 +6,8 @@ import AddComment from './AddComment';
 import ShowComments from './ShowComments';
 import PostalCodeMap from './PostalCodeMap';
 import Fade from 'react-reveal/Fade';
+import avatar from '../images/avatar.gif';
+
 
 const GalleryShowImages = props => {
    
@@ -22,7 +24,7 @@ const GalleryShowImages = props => {
                                     <div className="row">
                                         <div className="col-md-2">
                                        
-                                            <img className="img-thumbnail rounded-circle" src={`${props.url}/static/avatar.gif`} alt={`Avatar for ${image.ownername}`} />
+                                            <img className="img-thumbnail rounded-circle" src={avatar} alt={`Avatar for ${image.ownername}`} />
                                             <h5 className="mt-0">{image.ownername}</h5>
                                         </div>
                                         <div className="col-md-10 bg-light p-2">

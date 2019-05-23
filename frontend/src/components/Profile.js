@@ -5,6 +5,7 @@ import ProfileRow from "./ProfileRow";
 import PropTypes from "prop-types";
 import Fade from 'react-reveal/Fade';
 import LazyLoad from 'react-lazyload';
+import avatar from '../images/avatar.gif';
 
 const months = ['January', 'Febuary', 'March', 'April',
 'May', 'June', 'July', 'August',
@@ -20,7 +21,7 @@ const Profile = (props) => {
                          <ProfileRow
                               title="Avatar"
                          >
-                              <img src={`http://localhost:5000/static/avatar.gif`} className="rounded-circle p-2" />
+                              <img src={avatar} className="rounded-circle p-2" />
 
                          </ProfileRow>
                          <ProfileRow

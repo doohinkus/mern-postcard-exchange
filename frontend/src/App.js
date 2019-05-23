@@ -24,7 +24,7 @@ class App extends Component {
       isloggedin: false,
       images: [],
       refresh: false,
-      baseUrl: 'http://localhost:5000'
+      baseUrl: 'http://localhost:80'
     }
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.addUser = this.addUser.bind(this);
@@ -35,7 +35,6 @@ class App extends Component {
     this.addImage = this.addImage.bind(this);
     this.getImages = this.getImages.bind(this);
     this.editUser = this.editUser.bind(this);
-    // this.state.baseUrl = 'http://68.183.173.33:80';
   }
   toggleNavbar() {
     this.setState({
@@ -58,10 +57,12 @@ class App extends Component {
           if(res.data.error){
             this.setState({
               isloggedin: false,
+              iserror: true
             })
           }else{
             this.setState({
               isloggedin: false,
+              iserror: false,
               userinfo: res.data
             })
           }
@@ -178,9 +179,15 @@ class App extends Component {
           userinfo: res.data,
           error: false
         });
+      }else{
+        this.setState({
+          isloggedin: false,
+          error: true
+        });
       } 
     })
     .catch(error => {
+      console.log(error)
       this.setState({
         error: true,
         isloggedin: false,
