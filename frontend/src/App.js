@@ -24,7 +24,8 @@ class App extends Component {
       isloggedin: false,
       images: [],
       refresh: false,
-      baseUrl: 'http://localhost:80'
+      // baseUrl: 'http://localhost:80'
+      baseUrl: 'http://68.183.173.33:80'
     }
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.addUser = this.addUser.bind(this);
@@ -160,6 +161,7 @@ class App extends Component {
   }
   
   signIn(userinfo){
+    
     axios({
       method: 'post',
       url: `${this.state.baseUrl}/Login`,
@@ -173,6 +175,7 @@ class App extends Component {
       }
     })
     .then(res => {
+      console.log(res);
       if (res.data.message == "Success"){
         this.setState({
           isloggedin: true,
@@ -180,6 +183,8 @@ class App extends Component {
           error: false
         });
       }else{
+        console.log(res);
+
         this.setState({
           isloggedin: false,
           error: true
