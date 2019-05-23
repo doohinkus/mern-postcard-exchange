@@ -116,7 +116,6 @@ class Join extends Component {
                                     onChange={this.handleFormChange}
                                 />
                         
-                                {/* <Button onClick={this.advanceForm}>Next</Button> */}
                         </CardBody>
                     </Fade>
                 </Card>
@@ -173,7 +172,6 @@ class Join extends Component {
                                     onChange={this.handleFormChange}
 
                                 />
-                                {/* <Button onClick={this.retractForm}>Back</Button> */}
                                 <Button>Submit</Button>
                             </CardBody>
                         </Fade>
@@ -183,7 +181,6 @@ class Join extends Component {
             <React.Fragment>
                 <h1>Join</h1>
                 <Form onSubmit={this.handleSubmit} className="text-left mw-50 mx-auto">
-                    {/* {this.state.firstsection ? firstsection : secondsection} */}
                     {firstsection}
                     {secondsection}
                 </Form>

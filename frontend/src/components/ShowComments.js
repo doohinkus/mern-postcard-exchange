@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import Fade from 'react-reveal/Fade';
 
 class ShowComments extends Component {
-    // console.log(props._id, " : ", props.comments)
     constructor(props){
         super(props);
         this.state = {
