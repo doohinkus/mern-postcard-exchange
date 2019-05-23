@@ -13,12 +13,10 @@ const date = new Date();
 const month = months[date.getMonth()];
 const year = date.getFullYear();
 const Profile = (props) => {
-//     const message = (<p>Logged out</p>);
-//     if (!props.userinfo) return message;
     const userinfo = (
            <React.Fragment>
                <LazyLoad placeholder={<p>Loading...</p>} height={100}>
-                    <Fade bottom>
+                    <Fade>
                          <ProfileRow
                               title="Avatar"
                          >
@@ -99,7 +97,7 @@ const Profile = (props) => {
         <Authorized 
             isloggedin={props.isloggedin}
             authorized={userinfo}
-            default={(<p>Logged out</p>)}
+            default={(<p>Duplicate information--do you already have an account?</p>)}
         />
     )
             

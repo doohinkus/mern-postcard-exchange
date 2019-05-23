@@ -3,18 +3,14 @@ import axios from 'axios';
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import './App.css';
 import SignIn from './components/SignIn';
-import Gallery from './components/Gallery';
 import GalleryShowImages from './components/GalleryShowImages';
-// import GalleryAddImage from './components/GalleryAddImage';
 import Join from './components/Join';
 import Index from './components/Index';
 import Profile from './components/Profile';
 import EditProfile from './components/EditProfile';
 import Authorized from './components/Authorized';
 import GalleryAddImage from './components/GalleryAddImage';
-// import ComponentLoader from './components/ComponentLoader';
-import LazyLoad from 'react-lazyload';
-import { Nav, NavItem, Dropdown, DropdownItem, DropdownToggle, DropdownMenu, NavLink } from 'reactstrap';
+import { Nav, NavItem} from 'reactstrap';
 
 //event -state change - rerender
 class App extends Component {
@@ -23,11 +19,11 @@ class App extends Component {
     this.state = {
       collapsed: true,
       userinfo: [],
-      authorized: false,
       error: false,
       isloggedin: false,
       images: [],
-      refresh: false
+      refresh: false,
+      baseUrl: 'http://localhost:5000'
     }
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.addUser = this.addUser.bind(this);
@@ -38,6 +34,7 @@ class App extends Component {
     this.addImage = this.addImage.bind(this);
     this.getImages = this.getImages.bind(this);
     this.editUser = this.editUser.bind(this);
+    // this.state.baseUrl = 'http://68.183.173.33:80';
   }
   toggleNavbar() {
     this.setState({
@@ -47,48 +44,44 @@ class App extends Component {
   addUser(userinfo){
         axios({
           method: 'post',
-          url: "http://localhost:5000/AddUser",
+          url: `${this.state.baseUrl}/AddUser`,
           headers: {
             'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json',
           },
-          //get from form
           data: {
             userinfo
           }
         })
         .then(res => {
-          // console.log(res.data.userinfo)
-          this.setState({
-            authorized: true,
-            isloggedin: true,
-            userinfo: res.data
-          })
+          if(res.data.error){
+            this.setState({
+              isloggedin: false,
+              // iserror: true
+            })
+          }else{
+            this.setState({
+              isloggedin: false,
+              userinfo: res.data
+            })
+          }
         })
         .catch(error => console.log(error));
   }
   editUser(userinfo){
-    // console.log("data:", userinfo)
-    // console.log("token state: ", this.state.userinfo.token);
     axios({
       method: 'put',
-      url: "http://localhost:5000/EditUser",
+      url: `${this.state.baseUrl}/EditUser`,
       headers: {
         'Access-Control-Allow-Origin': '*',
-        // 'Content-Type': 'application/json',
         'x-access-token': this.state.userinfo.token
       },
-      //get from form
       data: {
         userinfo
       }
     })
     .then(res => {
-      //
-      console.log("EDIT RES DATA", res);
       this.setState({
-        // authorized: 1,
-        // isloggedin: 1,
         userinfo: res.data
       })
     })
@@ -98,16 +91,13 @@ class App extends Component {
   getImages(){
     axios({
       method: 'get',
-      url: "http://localhost:5000/GalleryImages",
+      url: `${this.state.baseUrl}/GalleryImages`,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
       }
     })
     .then(res => {
-      //
-    //  console.log(res.data);
-    
      this.setState({
        images: res.data
      })
@@ -116,39 +106,28 @@ class App extends Component {
 
   }
   addComment(data){
-    // console.log("APP comment: ", data)
     axios({
       method: 'post',
-      url: "http://localhost:5000/AddComment",
+      url: `${this.state.baseUrl}/AddComment`,
       headers: {
         'Access-Control-Allow-Origin': '*',
-        // 'Content-Type': `multipart/form-data; boundary=---XXX`,
         'x-access-token': this.state.userinfo.token
       },
-      //get from form
       data
       
     })
     .then(res => {
-      // console.log(res.data.images)
       this.setState({
-        authorized: true,
         isloggedin: true,
 
         images: res.data.images,
-        //send back new images data
 
-        // userinfo: res.data
       })
     })
     .catch(error => console.log(error));
 
   }
   addImage(formdata){
-    // console.log(formdata, " ", this.state.userinfo.token);
-    //  console.log("IMAGE INFO APP: ", formdata);
-     
-      // data.append('filename', this.fileName.value);
       const formData = new FormData();
       formData.set("galleryImage", formdata.image);
       formData.set("senderpostalcode", formdata.senderpostalcode);
@@ -156,20 +135,16 @@ class App extends Component {
       
       axios({
         method: 'post',
-        url: "http://localhost:5000/AddImage",
+        url: `${this.state.baseUrl}/AddImage`,
         headers: {
           'Access-Control-Allow-Origin': '*',
-          // 'Content-Type': `multipart/form-data; boundary=---XXX`,
           'x-access-token': this.state.userinfo.token
         },
-        //get from form
         data: formData
         
       })
       .then(res => {
-        // console.log(res)
         this.setState({
-          authorized: true,
           isloggedin: true,
         }, () => this.getImages())
       })
@@ -178,51 +153,42 @@ class App extends Component {
   signOut(e){
     e.preventDefault();
     this.setState({
-      authorized: false,
       isloggedin: false,
       userinfo: []
-    })
+    });
   }
   
   signIn(userinfo){
-    console.log(userinfo);
     axios({
       method: 'post',
-      url: "http://localhost:5000/Login",
+      url: `${this.state.baseUrl}/Login`,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
       },
-      //get from form
       data: {
         email: userinfo.email,
         password: userinfo.password
       }
     })
     .then(res => {
-      //check auth
-      console.log("RES: ", res.data);
       if (res.data.message == "Success"){
         this.setState({
-          authorized: true,
           isloggedin: true,
           userinfo: res.data,
-          error: 0
+          error: false
         });
       } 
     })
     .catch(error => {
-      // console.log("asfdasdf ",error," asdfasddf");
       this.setState({
-        error: 1,
-        authorized: false,
+        error: true,
         isloggedin: false,
         userinfo: []
       });
     });
   }
   componentDidMount(){
-    // console.log("mounted!!!")
     this.getImages();
   }
   
@@ -240,7 +206,7 @@ class App extends Component {
               <Link to="/edit" className="nav-link">Edit</Link>
           </NavItem>
           <NavItem>
-              <a href="#" className="nav-link" onClick={this.signOut}>Sign Out</a>
+              <a href='#' className="nav-link" onClick={this.signOut}>Sign Out</a>
           </NavItem>
           <NavItem>
               <Link to='/gallery' className="nav-link">Gallery</Link>
@@ -250,7 +216,6 @@ class App extends Component {
           <Route path="/profile" component={() => (
         
               <Profile 
-                // editlink={(<Link to="/edit">Edit</Link>)} 
                 signout={this.signOut}
                 partnerinfo={this.state.userinfo} 
                 userinfo={this.state.userinfo.userinfo} 
@@ -267,7 +232,8 @@ class App extends Component {
                 
                     <GalleryAddImage addimage={this.addImage} getimages={this.getImages} />
                     <GalleryShowImages
-                        showcommentform={true} 
+                        showcommentform={true}
+                        url={this.state.baseUrl} 
                         images={this.state.images}
                         addcomment={this.addComment}
                         author={this.state.userinfo.userinfo.firstname}
@@ -275,10 +241,11 @@ class App extends Component {
                 
               </React.Fragment>)
             }/>
+
+            
            
         </React.Fragment>
     );
-// if you want to separate, you must drop Link as a component
     const notauthorized = (
       <React.Fragment>
         <Nav tabs>
@@ -305,9 +272,12 @@ class App extends Component {
           }
         } />
         <Route path="/profile" component={() => (<Redirect to='/signin' />)} />
+
+      
         <Route path="/gallery" component={() => (
               <GalleryShowImages 
                   showcommentform={false} 
+                  url={this.state.baseUrl} 
                   images={this.state.images}
                   addcomment={this.addComment}
                 />

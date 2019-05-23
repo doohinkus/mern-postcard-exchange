@@ -5,7 +5,7 @@ const Field = props => {
     
         return(
             <FormGroup>
-                <Label for={props.label}>
+                <Label htmlFor={props.label}>
                     {props.title}:
                 </Label>
                 <Input 
@@ -15,6 +15,8 @@ const Field = props => {
                     autoComplete={props.autocomplete}
                     value={props.value}
                     onChange={props.onChange} 
+                    required
+
                 />
             </FormGroup>
         );

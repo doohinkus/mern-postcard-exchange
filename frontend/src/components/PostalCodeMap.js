@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Geocode from "react-geocode";
 import {googleApiKey} from  "../secret";
 import Map from "./Map";
-// import Geocode from "react-geocode";
 
 
 
@@ -19,7 +18,6 @@ class PostalCodeMap extends Component{
         Geocode.setApiKey("AIzaSyA6ljV2DbcA5PNva5Hu7PbmPBlQ2pKW4D0");
         Geocode.enableDebug();
       
-        //    add this to state
         Geocode.fromAddress(this.props.senderpostalcode)
             .then(response => {
                 this.setState({
@@ -31,7 +29,6 @@ class PostalCodeMap extends Component{
                         lat: response.results[0].geometry.location.lat,
                         lng: response.results[0].geometry.location.lng,
                     },
-                    // renderMap: true,
                 })
             })
             .then(() => {

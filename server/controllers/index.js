@@ -237,7 +237,7 @@ exports.AddUser =
         User.find({ email : req.body.userinfo.email})
         .exec()
         .then(user => {
-            if (user.length >= 1) return res.json({message: 'Duplicate information'});
+            if (user.length >= 1) return res.json({message: 'Duplicate information', error: "Duplicate information"});
             bcrypt.hash(req.body.userinfo.password, 10, (err, hash) => {
                 if (err) return res.status(500).json({error: `Hashing error: ${err}`});
                 

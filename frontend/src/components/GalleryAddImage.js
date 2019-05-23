@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Button, Card, CardTitle, CardBody } from 'reactstrap';
-import Field from "./Field";
+import { Button, Card, CardBody } from 'reactstrap';
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
+import Fade from 'react-reveal/Fade';
 
 
 
@@ -31,13 +31,9 @@ class GalleryAddImage extends Component {
             senderpostalcode: this.senderpostalcode.value,
             receiverpostalcode: this.receiverpostalcode.value
         }
-        // console.log(formdata);
-        // this.props.addimage(this.uploadinput.files[0]);
         this.props.addimage(formdata);
-        // this.props.getimages();
         this.props.history.push('/gallery');
         
-        //send token
 
     }
     toggle(e){
@@ -50,36 +46,44 @@ class GalleryAddImage extends Component {
     render(){
         const form = (
             <React.Fragment>
+                <Fade>
                    <div className="form-group">
                              <input className="form-control"  
                                  ref={(ref) => { this.uploadinput = ref; }}
                                  name="galleryImage" 
                                  id="galleryImage" 
+                                 required
+
                                  type="file" />
                          </div>
 
                          <div className="form-group">
-                             <label for="senderpostalcode">Sender Postalcode</label>
+                             <label htmlFor="senderpostalcode">Sender Postalcode</label>
                              <input className="form-control" 
                                  ref={(ref) => { this.senderpostalcode = ref; }} 
                                  name="senderpostalcode"
                                  id="senderpostalcode"
                                  type="text" 
+                                 required
+
                                  placeholder="zip from user address" />
                          </div>
                          <div className="form-group">
-                             <label for="receiverpostalcode">Receiver Postalcode</label>
+                             <label htmlFor="receiverpostalcode">Receiver Postalcode</label>
                              <input className="form-control" 
                                  ref={(ref) => { this.receiverpostalcode = ref; }} 
                                  name="receiverpostalcode"
                                  id="receiverpostalcode"
+                                 required
+
                                  type="text" 
                                  placeholder="zip from partner address" />
                          </div>
-                         <Button onClick={this.handleSubmit}>Submit</Button>
+                         <Button onClick={this.handleSubmit} lassName='btn btn-success' >Submit</Button>
+                </Fade>
             </React.Fragment>
         )
-        const button = (<button onClick={this.toggle}>{this.state.isopen ? "Close" : "Open"}</button>)
+        const button = (<button className='btn btn-primary' onClick={this.toggle}>{this.state.isopen ? "Close" : "Open"}</button>)
        return (
           
 
