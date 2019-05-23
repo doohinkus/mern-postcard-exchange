@@ -10,13 +10,7 @@ module.exports = (app) =>{
        .post(controllers.AddUser);
        
        app.route('/Login')
-       //sets token in header 
-       //front end needs to grab token
-       //And send it back in the header
        .post(controllers.Login);
-       
-       // app.route('/:userId')
-       // .get(controllers.CheckAuth, controllers.Get);
        
        
    app.route('/AddComment')

@@ -10,14 +10,11 @@ const userSchema = mongoose.Schema({
         type: String,
         required: [true, "Must include last name"]
     },
-    // contact: {
     email: {
         type: String,
-        // unique: true,
         required: true,
         match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
     },
-        // address: {
     streetaddress: {
         type: String,
         required: true
@@ -38,8 +35,6 @@ const userSchema = mongoose.Schema({
         type: Number,
         required: true
     },
-        // }
-    // },
     password: {
         type: String,
         required: true

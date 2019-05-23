@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { Button, Card, CardBody } from 'reactstrap';
+import { Button, Card, CardBody, Form } from 'reactstrap';
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import Fade from 'react-reveal/Fade';
-
-
 
 class GalleryAddImage extends Component {
     constructor(props){
@@ -25,7 +23,7 @@ class GalleryAddImage extends Component {
     }
     handleSubmit(e){
         e.preventDefault();
-        if(!this.uploadinput.value) return alert('missing stuff');
+        // if(!this.uploadinput.value) return alert('missing stuff');
         const formdata = {
             image: this.uploadinput.files[0],
             senderpostalcode: this.senderpostalcode.value,

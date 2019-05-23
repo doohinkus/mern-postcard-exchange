@@ -30,17 +30,23 @@ class AddComment extends Component {
         return(
             <div className="p-3 bg-light rounded">
                 <form onSubmit={this.handleSubmit}>
-                 <ProfileRowComment title="Comment:">   
-                      <div className="form-group">
+                 {/* <ProfileRowComment title="Comment:">    */}
+                      <div className="form-group row">
+                          <div className="col-sm-10">
+
                           <input className="form-control"  
                               name="comment" 
                               id="comment" 
                               type="text"
+                              required
                               onChange={this.handleFormChange}
                           />
+                          </div>
+                          <div className="col-sm-2">
+                            <input type="submit" className="btn btn-success" value="Submit" />
+                          </div>
                       </div>
-                 </ProfileRowComment>
-                  <input type="submit" className="btn btn-success" value="Submit" />
+                 {/* </ProfileRowComment> */}
                 </form>
       
             </div>

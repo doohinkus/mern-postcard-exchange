@@ -1,9 +1,5 @@
 const mongoose = require('mongoose');
-// const Schema = mongoose.Schema;
 const commentSchema = mongoose.Schema({
-    // _id: mongoose.Types.ObjectId,
-    // sender: String,
-    // recipient: String,
     posted: Date,
     author: String,
     text: String

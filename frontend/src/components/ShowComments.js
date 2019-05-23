@@ -33,7 +33,7 @@ class ShowComments extends Component {
                 </React.Fragment>
             )
         })
-        const showHideButton = (<a onClick={this.toggleComments} style={{cursor: "pointer"}}>{this.state.showComment ? "Hide" : "Show"} Comments</a>);
+        const showHideButton = (<p className="mt-2"><a onClick={this.toggleComments} style={{cursor: "pointer"}} className="text-primary">{this.state.showComment ? "Hide" : "Show"} Comments</a></p>);
         return ( 
             <React.Fragment>
               

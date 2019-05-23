@@ -51,7 +51,6 @@ exports.CheckAuth = (req, res, next) =>{
     } else{
          return res.json({message: 'This Route is Forbidden'})
     }
-    // next();
 }
 exports.Index = (req, res, next) =>{
     return res.json({
@@ -63,25 +62,18 @@ exports.Favicon = (req, res, next) =>{
 }
 //must match params coming in
 exports.UploadImage = upload.single('galleryImage');
-// exports.UploadImage = upload.none();
 
 exports.GalleryImages = (req, res, next) => {
     Gallery.find({})
         .sort({url: 'descending'})
         .exec()
         .then(images => {
-            // console.log("i ", images);
             return res.json(images)
         })
         .catch(err => console.log("GALLERY ERROR::::: ", err));
-    //send data to frontend
 }
 
-//comments find the image push into to image contents array
 exports.AddComment = (req, res, next) =>{
-    //find image by _id
-    // return res.json({message: "Comment route working", data: req.body});
-    // console.log(req.body._id)
     const query = {
         _id: req.body._id
     }
@@ -93,8 +85,6 @@ exports.AddComment = (req, res, next) =>{
     }
     Gallery.findOneAndUpdate(query, { $push : {comments: data }}, {upsert:true}, (err, result) => {
         if(err) return res.json({message: "error making comment", err});
-        //just send back comment
-        // send back updated list of images
         Gallery.find({})
             .sort({url: 'descending'})
             .exec()
@@ -106,16 +96,8 @@ exports.AddComment = (req, res, next) =>{
 
     });
        
-        // .catch(err => {
-        //     console.log(err)
-        //     return res.json({message: "Error occured while adding comment."})
-        // })
 
 }
-// exports.ShowComments = (req, res, next) =>{
-//     //call this in show images???
-
-// }
 
 exports.AddImage = (req, res, next) =>{
     
@@ -133,7 +115,6 @@ exports.AddImage = (req, res, next) =>{
 
     image.save()
         .then(result => {
-            //return a new list of images!!!! to refresh gallery
             return res.json({
                 success: `Gallery Photo  ${req.file.filename} added`,
                 message: "Success",
@@ -150,18 +131,14 @@ exports.AddImage = (req, res, next) =>{
 
 }
 exports.Get = (req, res, next) =>{
-    // console.log(req.token)
     return res.json({
         route: `User by ID ${req.params.userId}`
     });
 }
 
 exports.Login = (req, res, next) => {
-    // console.log(req.body.email, req.body.password);
-    // return res.json({ email: req.body.email })
     User.findOne({email: req.body.email}, (err, user) => {
         if(err) return res.json({error: err});
-        // console.log(user);
         if (!user) return res.status(404).json({error: `User not found`});
         bcrypt.compare(req.body.password, user.password, (err, result) =>{
             if(err) console.log(err);
@@ -172,22 +149,15 @@ exports.Login = (req, res, next) => {
                     {expiresIn: '1h'}, 
                     (err, token) => {
                         if (err) return res.json({message: "error with token"});
-                        //if participating and paired up, send partner info
                         console.log("USER:::> ", user)
                         if(user.ispaired){
-                            //find user.partner.partner_id
                             User.findOne({_id: user.partner}, (err, partner) =>{
                                 if (err)  return res.json({message: "Error fining partner"});
-                                //partner firstname
-                                //partner address
                                 console.log("PARTNER::::> ", partner)
                                 return res
                                 .json({
-                                    //set token for app
                                     token, 
                                     message: "Success", 
-                                    // email: user.contact.email, 
-                                    // userid: user._id,
                                     userinfo: user,
                                     partner: {
                                         partnername: partner.firstname,
@@ -208,11 +178,8 @@ exports.Login = (req, res, next) => {
                         }else{
                             return res
                             .json({
-                                //set token for app
                                 token, 
                                 message: "Success", 
-                                // email: user.contact.email, 
-                                // userid: user._id,
                                 userinfo: user});
                         }
 
@@ -224,16 +191,12 @@ exports.Login = (req, res, next) => {
             }
           
         });
-        //   return res.json({message: "Something got fucked up"})
     });
    
         
 }
 exports.AddUser = 
     (req, res, next) => {
-        // console.log(req.body)
-        // console.log(req.body.userinfo)
-        // User.find({'contact.email': req.body.userinfo.email})
         User.find({ email : req.body.userinfo.email})
         .exec()
         .then(user => {
@@ -245,17 +208,13 @@ exports.AddUser =
                     _id: mongoose.Types.ObjectId(),
                     firstname: req.body.userinfo.firstname,
                     lastname: req.body.userinfo.lastname,
-                    // contact: {
                     email: req.body.userinfo.email,
-                        // address: {
                     streetname: req.body.userinfo.streetname,
                     streetaddress: req.body.userinfo.streetaddress,
                     city: req.body.userinfo.city,
                     state: req.body.userinfo.state,
                     country: req.body.userinfo.country,
                     postalcode: req.body.userinfo.postalcode,
-                        // }
-                    // },
                     password: hash,
                     ispaired: false,
                     isparticipating: false,
@@ -264,7 +223,6 @@ exports.AddUser =
                 })
                 user.save()
                     .then(result => {
-                //set token???
                         return res
                         .json({
                             route: 'POST',
@@ -284,45 +242,28 @@ exports.AddUser =
   
     
 }
-// protected PUT REQUEST!!!!!!!
 exports.EditUser = (req, res, next) =>{
-    //search by id from verified token
     const query = {
         _id: res.verifiedToken.userid
     }
-    // console.log("BODY: ", req.body.userinfo);
-    // update should only have values that change
-    
-    // console.log(req.body);
-    // return res.json({ query, update})
     User.findOneAndUpdate(query, req.body.userinfo, {upsert:true}, function(err, result){
         if (err) return res.send(500, { error: err });
-        // console.log(result);
-        // return updated record
         User.findOne(query, (err, user) => {
             if(user.ispaired){
-                //find user.partner.partner_id
                 jwt.sign(
                     {email: user.email, userid: user._id}, 
                     key,
                     {expiresIn: '1h'}, 
                     (err, token) => {
                         if (err) return res.json({message: "error with token"});
-                        //if participating and paired up, send partner info
                         if(token){
-                            //find user.partner.partner_id
                             User.findOne({_id: user.partner}, (err, partner) =>{
                                 if (err)  return res.json({message: "Error fining partner"});
-                                //partner firstname
-                                //partner address
                                 console.log("PARTNER::::> ", partner)
                                 return res
                                 .json({
-                                    //set token for app
                                     token, 
                                     message: "Success", 
-                                    // email: user.contact.email, 
-                                    // userid: user._id,
                                     userinfo: user,
                                     partner: {
                                         partnername: partner.firstname,
@@ -348,24 +289,15 @@ exports.EditUser = (req, res, next) =>{
             else{
                 return  res
                             .json({
-                                //set token for app
                                 token, 
                                 message: "Success", 
-                                // email: user.contact.email, 
-                                // userid: user._id,
                                 userinfo: user})
             }
-            // return res.json({message: "Success", userinfo: result});
         });
-        // return res.status(404).json({error: `Error occured`, message: 'User not found'})
-    
-        // return res.json({message: `user: ${req.body.firstname} successfully updated`, userinfo: result});
     });
     
 }
-// protected
 exports.DeleteUser = (req, res, next) =>{
-    // console.log(req.params.userId);
     User.deleteOne({ _id: req.params.userId }, (err, success) => {
         if (err) return res.status(400).json({error: err});
         return res.status(200).json({message: 'user deleted'});
@@ -378,7 +310,6 @@ exports.PairUsers = (req, res, next) => {
     User.find({})
         .exec()
         .then(user => {
-            // console.log(user[0]._id);
             const id_list = user
                             .filter(user => user._id != null && user.isparticipating)
                             .map(user => user._id);
@@ -387,7 +318,6 @@ exports.PairUsers = (req, res, next) => {
             randomized.forEach((user, index, arr) => {
                 const partner = (index + 1) < randomized.length ? (index + 1) : 0;
                 console.log(arr[index], " -> ", arr[partner]);
-                //find arr[index] 
                 User.findOneAndUpdate({_id: arr[index]}, {
                     partner: arr[partner],
                     ispaired: true,
@@ -395,10 +325,8 @@ exports.PairUsers = (req, res, next) => {
                 .exec()
                 .then(result => {
                     console.log("RESULT PAIRING::::> ", result);
-                    // return res.json({})
                 })
                 .catch(err => console.log(err));
-                //update partner to arr[partner]
             })
            
         })
