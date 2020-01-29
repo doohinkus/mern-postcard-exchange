@@ -5,7 +5,3 @@ This project uses Express to create a token authenticated API that will be consu
 
 ## More to Come
 This project is still in development.
-
-## Link to Alpha
-The Node API is dockerized and being temporrily served on digital ocean. Here is the link to the front end:
-http://incandescent-veil.surge.sh/
