@@ -27,7 +27,7 @@
     "node-geocoder": "^3.22.0",
     "nodemon": "^1.18.11",
     "passport": "^0.4.0",
-    "pug": "^2.0.3",
+    "pug": "^3.0.1",
     "react-addons-css-transition-group": "^15.6.2",
     "react-geocode": "^0.1.2",
     "react-transition-group": "^4.0.1"
